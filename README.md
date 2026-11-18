@@ -92,11 +92,12 @@ Vigil modifies system power parameters temporarily while a session is active, th
 
 ## Using it
 
-1. **Start.** Launch Vigil or click the icon in your system tray. Click a preset chip (`30m`, `1h`, `2h`, `4h`, or `∞`) to start immediately.
-2. **Add time.** Click `+30 Menit` anytime during an active session to extend the remaining duration.
-3. **Move and minimize.** Drag the window anywhere on your screen by clicking and holding any open space. Click the minimize button (`—`) in the header to minimize the flyout, or click the close button (`✕`) to hide it cleanly into the system tray.
-4. **End early.** Click `Akhiri` on the dashboard, or right-click the system tray icon and choose **End Active Session**. Original power policies and process states are restored instantly.
-5. **Auto-Pilot.** In `config.json`, add process names you want Vigil to watch (such as `blender.exe` or `ollama.exe`). When the monitored process launches, Vigil arms itself automatically; when the process exits, Vigil cleanly restores your machine.
+1. **Master ON / OFF Switch.** Toggle the master protection switch at the top of the flyout. Turning it **ON** immediately arms clamshell protection and thermal capping with no time limit (`∞`). Flipping it **OFF** restores your system power scheme to normal.
+2. **AI Auto-Pilot (Hands-Free).** Vigil monitors active AI agents and intensive workloads (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`). When an AI workflow starts, Vigil turns ON automatically, switches the badge to `AI ACTIVE`, displays the running process name, and keeps your laptop awake. Once the process completes, Vigil returns to `Standby` on its own.
+3. **Timed Presets & Time Extension.** If you prefer a timed session, click any preset chip (`30m`, `1h`, `2h`, `4h`, or `∞`). Click `+30 Menit` at any time to extend your running session.
+4. **Wi-Fi Auto-Reconnect Watchdog.** Toggle the dedicated `Auto-Reconnect` switch in the Wi-Fi card to ensure Windows does not drop your network adapter when the screen is powered down. Vigil monitors ping latency to your gateway and reconnects automatically if dropped.
+5. **Move & Minimize to Tray.** Click and drag anywhere on the flyout to reposition it. Click the minimize button (`—`) in the header to minimize the flyout, or click the close button (`✕`) to hide it cleanly into the system tray.
+6. **End Anytime.** Click `Akhiri` or right-click the white tray icon to select **End Active Session**. Original power policies and process states are restored instantly.
 
 ---
 
