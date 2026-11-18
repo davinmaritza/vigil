@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo-transparent.png" alt="Vigil: Windows Clamshell and Cooling Guard" width="112">
+  <img src="assets/icon.png" alt="Vigil: Windows Clamshell & Cooling Guard" width="96">
 </p>
 
 <h1 align="center">Vigil</h1>
@@ -9,40 +9,68 @@
 </p>
 
 <p align="center">
-  A Windows system tray app and CLI for timed clamshell sessions and thermal protection. Vigil lives in your taskbar notification area. Set how long your laptop stays awake with the lid closed, cap CPU temperatures to prevent heat buildup, and rely on write-ahead recovery journals so your original power settings always restore cleanly.
+  A minimalist Windows system tray app and CLI for timed clamshell sessions, thermal throttling, and background workload protection. Built with a Dieter Rams and Teenage Engineering-inspired industrial interface. Vigil lives silently in your taskbar notification area, keeping your laptop awake with the lid closed while preventing CPU thermal runaway during heavy overnight AI, 3D rendering, or compilation jobs.
 </p>
 
 <p align="center">
   <a href="#install"><strong>Install</strong></a> ·
   <a href="#what-you-can-use-it-for"><strong>Use Cases</strong></a> ·
-  <a href="#using-it"><strong>Using it</strong></a> ·
-  <a href="#what-happens-when-the-lid-closes"><strong>Lid close</strong></a> ·
-  <a href="#how-recovery-works"><strong>Recovery</strong></a> ·
-  <a href="#cli-and-automation"><strong>CLI & Automation</strong></a> ·
-  <a href="#acknowledgements"><strong>Acknowledgements</strong></a>
+  <a href="#features"><strong>Features</strong></a> ·
+  <a href="#how-to-stop-or-cancel"><strong>How to Cancel</strong></a> ·
+  <a href="#what-happens-when-the-lid-closes"><strong>Lid Close & Thermals</strong></a> ·
+  <a href="#recovery-architecture"><strong>Recovery</strong></a> ·
+  <a href="#cli-and-automation"><strong>CLI & Automation</strong></a> 
 </p>
 
 <p align="center">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-303336?style=flat-square"></a>
-  <img alt="Windows 11 Build 26100+" src="https://img.shields.io/badge/Windows-11%20(24H2%2B)-303336?style=flat-square">
+  <img alt="Windows 10 / 11 (24H2+)" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20(24H2%2B)-303336?style=flat-square">
   <img alt=".NET 11.0" src="https://img.shields.io/badge/.NET-11.0-303336?style=flat-square">
-  <img alt="Release v1.0.0" src="https://img.shields.io/badge/Release-v1.0.0-536D78?style=flat-square">
+  <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.0" src="https://img.shields.io/badge/Release-v1.0.0-536D78?style=flat-square"></a>
 </p>
 
-> **Use a stable, well-ventilated surface, not a closed bag.** Vigil is designed for overnight desktop workloads, local AI agents, and heavy builds. A running timer is not a substitute for airflow.
+<p align="center">
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Minimalist Popover UI" width="316">
+</p>
+
+> **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
 
 ---
 
 ## What you can use it for
 
-Vigil is built for any long-running task where you want to close your laptop lid, leave it on your desk, and prevent Windows from sleeping or overheating:
+Vigil is engineered for long-running headless tasks where you need to close your laptop lid, leave it on your desk, and prevent Windows from sleeping or thermal throttling:
 
-- **AI coding agents and background tooling**: Run Antigravity, Claude Code, Cursor, Aider, or long test suites overnight without keeping the lid open.
-- **Local AI and model inference**: Keep Ollama, LM Studio, ComfyUI, vLLM, or PyTorch fine-tuning jobs running continuously.
-- **3D rendering and simulation**: Leave Blender, Cinema 4D, Unreal Engine, or Maya rendering overnight.
-- **Video exports and transcoding**: Let DaVinci Resolve, Adobe Premiere Pro, or Handbrake encodes finish with the screen turned off.
-- **Large software builds**: Compile large Rust, C++, .NET, or Android Studio projects while away from your desk.
-- **Overnight downloads and cloud sync**: Finish multi-gigabyte transfers without screen glare or accidental sleep interruptions.
+- **AI Agents & Model Inference**: Run Antigravity, Claude Code, Cursor, Ollama, LM Studio, ComfyUI, vLLM, or PyTorch pipelines overnight.
+- **3D Rendering & Simulation**: Leave Blender, Unreal Engine, Maya, or Cinema 4D renders churning without keeping the laptop open.
+- **Video Encoding & Exports**: Complete DaVinci Resolve, Adobe Premiere Pro, or Handbrake encodes in peace.
+- **Codebase Compilation**: Build large Rust, C++, .NET, or Android projects without accidental sleep interruptions.
+- **Batch Processing & Downloads**: Complete large multi-gigabyte cloud transfers and data ingestion jobs reliably.
+
+---
+
+## Features
+
+- **Industrial Minimalist Interface**: Compact 316×465 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with unified Grouped Inset telemetry rows. Zero AI-slop, clean human-crafted engineering.
+- **Master Hardware Toggle**: Top header switch toggles instant protection ON/OFF without requiring timer configuration.
+- **Process Supervisor (Auto-Armed)**: Automatically observes active compute pipelines (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`), arming into `GUARD ACTIVE` and reverting cleanly to `STANDBY` upon completion.
+- **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, display backlight sleeps naturally and wakes instantly on lid open.
+- **CPU Thermal Throttler**: Enforces a 92% maximum processor state cap (`PROCTHROTTLEMAX`), preventing Intel and AMD Turbo Boost voltage spikes while preserving full multi-core throughput.
+- **Wi-Fi Watchdog**: Periodically monitors local gateway ping latency and auto-reassociates dropped wireless profiles via `netsh` during headless operation.
+- **Idle Process Throttler**: Optionally suspends resource-hungry background applications (`slack.exe`, `discord.exe`, `spotify.exe`) via native `NtSuspendProcess` and resumes them on session end.
+- **Write-Ahead Recovery Journal**: All modified power settings are logged atomically to `%LOCALAPPDATA%\Vigil\recovery.json` alongside an out-of-process Task Scheduler watchdog to guarantee 100% restoration even across sudden power loss or reboots.
+
+---
+
+## How to stop or cancel
+
+Vigil provides four immediate, fail-safe ways to cancel an active guard session:
+
+1. **Press `ESC` on your keyboard**: With the Vigil window open, pressing `ESC` instantly terminates the session and restores default Windows power policies.
+2. **Prominent Stop Button**: The right-side action button lights up in high-contrast vermillion: `■ Hentikan [ESC]`.
+3. **Interactive Cancel Banner**: Clicking the hint banner directly beneath the action buttons immediately aborts the session.
+4. **Right-Click System Tray**: Right-clicking the taskbar tray icon presents **`🛑 Hentikan Proteksi [Kembalikan Normal]`** in bold at the top of the menu.
+5. **Open the Laptop Lid**: Opening the laptop lid immediately restores the internal display panel backlight.
 
 ---
 
@@ -52,94 +80,69 @@ Requires Windows 10 (Build 19041+) or Windows 11 (including 24H2 Build 26100+).
 
 ### Prebuilt release (recommended)
 
-1. Download the latest self-contained archive from [Releases](https://github.com/davinmaritza/vigil/releases/latest).
-2. Extract the folder anywhere on your computer.
-3. Run `Vigil.exe`. The pure monochrome flyout will appear on your screen, and an icon will be added to your system tray.
+1. Download the standalone `Vigil.exe` or portable zip archive from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
+2. Run `Vigil.exe`. The compact popover will appear near your taskbar notification area.
 
-To pin Vigil to your Windows taskbar or Start menu, right-click `Vigil.exe` and select **Pin to taskbar** or **Pin to Start**.
+```powershell
+# Quick launch via PowerShell
+Start-Process "Vigil.exe"
+```
 
 ### Build from source
 
-Requires the .NET 11 SDK on Windows:
+Requires the .NET 11 SDK:
 
 ```powershell
 # Clone the repository
 git clone https://github.com/davinmaritza/vigil.git
 cd vigil
 
-# Build and run tests
-dotnet build src/Vigil/Vigil.csproj
+# Run test suite
 dotnet test tests/Vigil.Tests/Vigil.Tests.csproj
 
 # Publish standalone executable
-dotnet publish src/Vigil/Vigil.csproj -c Release -r win-x64 --self-contained true -o dist
+dotnet publish src/Vigil/Vigil.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -o dist
 ```
-
-<details>
-<summary><strong>What Vigil changes on your Windows system during a session</strong></summary>
-
-Vigil modifies system power parameters temporarily while a session is active, then restores them when the session ends:
-
-- **Lid-close action**: Sets AC and DC lid action (`LIDACTION` under power subgroup `SUB_BUTTONS`) to `0` (Do nothing) and asserts `SetThreadExecutionState` with execution flags. On modern Modern Standby laptops where OEM firmware hides this setting from `powercfg`, Vigil updates the index directly in the registry.
-- **Processor maximum state cap**: Capped at `92%` (`PROCTHROTTLEMAX` under power subgroup `SUB_PROCESSOR`). This prevents Intel and AMD boost algorithms from applying peak voltages, keeping core temperatures in the 60°C to 70°C range under sustained load.
-- **Display power off**: Calls `SendMessage(HWND_BROADCAST, WM_SYSCOMMAND, SC_MONITORPOWER, 2)` to turn off internal displays, eliminating backlight heat and saving power.
-- **Write-ahead recovery journal**: Saved atomically to `%LOCALAPPDATA%\Vigil\recovery.json` before any settings are modified.
-- **Watchdog scheduled task**: Schedules an out-of-process task in Windows Task Scheduler set for one minute past session expiration. If Vigil or the operating system crashes, the scheduled task runs `Vigil.exe --recover` to restore your original power scheme.
-
-</details>
-
----
-
-## Using it
-
-1. **Master ON / OFF Switch.** Toggle the master protection switch at the top of the flyout. Turning it **ON** immediately arms clamshell protection and thermal capping with no time limit (`∞`). Flipping it **OFF** restores your system power scheme to normal.
-2. **AI Auto-Pilot (Hands-Free).** Vigil monitors active AI agents and intensive workloads (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`). When an AI workflow starts, Vigil turns ON automatically, switches the badge to `AI ACTIVE`, displays the running process name, and keeps your laptop awake. Once the process completes, Vigil returns to `Standby` on its own.
-3. **Timed Presets & Time Extension.** If you prefer a timed session, click any preset chip (`30m`, `1h`, `2h`, `4h`, or `∞`). Click `+30 Menit` at any time to extend your running session.
-4. **Wi-Fi Auto-Reconnect Watchdog.** Toggle the dedicated `Auto-Reconnect` switch in the Wi-Fi card to ensure Windows does not drop your network adapter when the screen is powered down. Vigil monitors ping latency to your gateway and reconnects automatically if dropped.
-5. **Move & Minimize to Tray.** Click and drag anywhere on the flyout to reposition it. Click the minimize button (`—`) in the header to minimize the flyout, or click the close button (`✕`) to hide it cleanly into the system tray.
-6. **End Anytime.** Click `Akhiri` or right-click the white tray icon to select **End Active Session**. Original power policies and process states are restored instantly.
 
 ---
 
 ## What happens when the lid closes
 
-Closing a laptop lid on Windows normally triggers Modern Standby, which suspends background user processes and pauses active terminals.
+Closing a laptop lid on Windows normally triggers Modern Standby, suspending background user processes and disconnecting network sessions.
 
-If you manually set your lid action to "Do nothing" in Windows Control Panel, modern processors will boost to maximum frequency. In a closed chassis where cooling exhausts are partially obstructed by the hinge, CPU temperatures can rapidly climb above 90°C, leading to thermal throttling or sudden safety shutoffs.
+If you manually set lid action to "Do nothing" in Windows Control Panel, modern processors boost to maximum aggressive turbo frequencies. In a closed chassis where exhausts are restricted by the hinge, CPU temperatures can rapidly climb past 90°C, causing severe throttling or emergency thermal shutdown.
 
-Vigil resolves both problems:
-
-1. **Keeps tasks running**: Prevents sleep mode while the session is active.
-2. **Suppresses thermal spikes**: The 92 percent CPU cap restricts peak voltage requests, dropping sustained temperatures by 20°C to 25°C with less than 5 percent impact on multi-core compute throughput.
-3. **Blacks out internal screens**: Eliminates display heat from radiating into the closed keyboard deck.
-4. **Maintains network connectivity**: Pings the local gateway every 30 seconds and automatically reconnects Wi-Fi if Windows drops the adapter while headless.
+Vigil resolves this:
+1. **Prevents Sleep**: Keeps user compute processes and active terminals running uninhibited via `SetThreadExecutionState`.
+2. **Suppresses Thermal Surges**: The 92% CPU ceiling disables Turbo Boost voltage spikes, reducing core temperatures by 20°C to 25°C while maintaining over 95% multi-threaded compute throughput.
+3. **Maintains Wireless Connectivity**: Automatically reassociates dropped Wi-Fi profiles if Windows disables the radio during headless operation.
 
 ---
 
-## How recovery works
+## Recovery architecture
 
 Vigil uses a two-tier write-ahead crash journaling design:
 
-1. Before modifying any power settings, Vigil queries and snapshots your active power scheme GUID, original lid action values, and maximum processor states.
-2. The snapshot is written atomically to `%LOCALAPPDATA%\Vigil\recovery.json` using temporary staging and `File.Replace`.
-3. A scheduled task backstop is registered with Windows Task Scheduler set to run at `sessionEnd + 1 minute`.
-4. Only after the journal is committed does Vigil modify power policies and suspend background apps.
+1. Before modifying power settings, Vigil snapshots your active power scheme GUID, original lid actions, and maximum processor states.
+2. The snapshot is written atomically to `%LOCALAPPDATA%\Vigil\recovery.json`.
+3. A scheduled task backstop is registered in Windows Task Scheduler set to run at `sessionEnd + 1 minute`.
+4. Only after the journal is committed does Vigil apply power modifications and suspend background apps.
 
-When a session ends normally, original settings are restored, suspended processes are resumed, the journal file is deleted, and the watchdog task is cancelled.
+When a session ends normally, original settings are restored, suspended processes are thawed, the journal is cleared, and the watchdog task is cancelled.
 
-If your laptop loses power, restarts, or crashes during a session, Vigil detects the active journal on next boot (or via the Task Scheduler backstop) and restores your original power configuration automatically.
+If power is lost or Windows crashes, Vigil detects the orphaned journal on next boot (or via the Task Scheduler watchdog) and executes `Vigil.exe --recover` to restore system settings automatically.
 
 ---
 
 ## CLI and automation
 
-Vigil includes a full command-line interface, allowing background scripts, dev containers, and AI coding agents to control sessions programmatically.
+Vigil includes a full command-line interface for terminal scripting, dev containers, and AI agent automation:
 
 ```powershell
 # Show command-line help
 Vigil.exe --help
 
-# Query current session, temperature, and Wi-Fi state as JSON
+# Query current telemetry as JSON
 Vigil.exe --session status --json
 
 # Start a session for 7200 seconds (2 hours)
@@ -155,18 +158,6 @@ Vigil.exe --session end
 Vigil.exe --recover
 ```
 
-### Scripting with AI coding agents
-
-You can chain Vigil with local AI coding agents or long build pipelines in terminal scripts:
-
-```powershell
-# Arm Vigil for 2 hours, run Claude Code, and restore power settings on completion
-Vigil.exe --session start 7200; claude; Vigil.exe --session end
-
-# Run Antigravity with clamshell protection
-Vigil.exe --session start 14400; antigravity run; Vigil.exe --session end
-```
-
 ### JSON telemetry output
 
 Calling `Vigil.exe --session status --json` returns structured telemetry:
@@ -175,63 +166,14 @@ Calling `Vigil.exe --session status --json` returns structured telemetry:
 {
   "status": "Active",
   "remaining_seconds": 5420,
-  "target_process": "claude.exe",
-  "cpu_temp_celsius": 61.0,
+  "target_process": "python.exe",
+  "cpu_temp_celsius": 58,
   "cpu_max_state": 92,
   "wifi_ssid": "Studio-5GHz"
 }
 ```
 
 ---
-
-## Optional extras
-
-<details>
-<summary><strong>Background process freezer</strong></summary>
-
-During heavy compute jobs, background applications consume memory bandwidth and CPU cycles. Vigil can automatically suspend background processes (such as `slack.exe`, `discord.exe`, or `spotify.exe`) using the native NT API `NtSuspendProcess`, and resume them cleanly with `NtResumeProcess` when the session completes.
-
-System processes and Vigil itself are protected by hardcoded safety filters and bypass lists.
-
-</details>
-
-<details>
-<summary><strong>Wi-Fi watchdog</strong></summary>
-
-Windows occasionally disables network adapters when operating headless with the display powered down. Vigil pings your default gateway periodically. If packets drop repeatedly, Vigil invokes `netsh wlan connect` using your active profile to re-establish the connection.
-
-</details>
-
-<details>
-<summary><strong>Configuration file</strong></summary>
-
-Configuration settings are stored in `%LOCALAPPDATA%\Vigil\config.json`. You can configure default session durations, CPU throttling percentages, monitored process lists, and background freezer targets.
-
-</details>
-
----
-
-## Development
-
-Run the automated test suite from the repository root:
-
-```powershell
-dotnet test tests/Vigil.Tests/Vigil.Tests.csproj
-```
-
-The test suite validates power policy parsing, registry fallbacks, recovery journal atomic write/read cycles, corrupted journal handling, and process freezer safety filters.
-
----
-
-## Star history
-
-<a href="https://www.star-history.com/?repos=davinmaritza%2Fvigil&amp;type=date&amp;legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=davinmaritza/vigil&amp;type=date&amp;theme=dark&amp;legend=top-left" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=davinmaritza/vigil&amp;type=date&amp;legend=top-left" />
-    <img alt="Star history for davinmaritza/vigil" src="https://api.star-history.com/svg?repos=davinmaritza/vigil&amp;type=date&amp;legend=top-left" />
-  </picture>
-</a>
 
 ---
 
