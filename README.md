@@ -9,16 +9,16 @@
 </p>
 
 <p align="center">
-  A minimalist Windows system tray app and CLI for timed clamshell sessions, thermal throttling, and background workload protection. Built with a Dieter Rams and Teenage Engineering-inspired industrial interface. Vigil lives silently in your taskbar notification area, keeping your laptop awake with the lid closed while preventing CPU thermal runaway during heavy overnight AI, 3D rendering, or compilation jobs.
+  A minimalist Windows system tray app and CLI for timed clamshell sessions, thermal throttling, and background workload protection. Built with an industrial interface inspired by Dieter Rams and Teenage Engineering. Vigil lives quietly in your taskbar notification area, keeping your laptop awake with the lid closed while preventing CPU thermal runaway during overnight AI agent runs, 3D rendering, or compilation jobs.
 </p>
 
 <p align="center">
-  <a href="#install"><strong>Install</strong></a> ·
+  <a href="#quick-start"><strong>Quick Start</strong></a> ·
   <a href="#what-you-can-use-it-for"><strong>Use Cases</strong></a> ·
+  <a href="#ui-overview"><strong>UI Overview</strong></a> ·
+  <a href="#how-to-cancel"><strong>How to Cancel</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#how-to-stop-or-cancel"><strong>How to Cancel</strong></a> ·
-  <a href="#what-happens-when-the-lid-closes"><strong>Lid Close & Thermals</strong></a> ·
-  <a href="#recovery-architecture"><strong>Recovery</strong></a> ·
+  <a href="#configuration"><strong>Configuration</strong></a> ·
   <a href="#cli-and-automation"><strong>CLI & Automation</strong></a> 
 </p>
 
@@ -29,8 +29,17 @@
   <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.0" src="https://img.shields.io/badge/Release-v1.0.0-536D78?style=flat-square"></a>
 </p>
 
+---
+
+## UI Overview
+
 <p align="center">
-  <img src="docs/images/vigil-ui-active.png" alt="Vigil Minimalist Popover UI" width="316">
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Active Guard State" width="310">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/vigil-ui-standby.png" alt="Vigil Standby State" width="310">
+</p>
+
+<p align="center">
+  <em>Left: Active Guard session with live countdown and high-contrast Stop button. Right: Clean standby mode.</em>
 </p>
 
 > **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
@@ -39,49 +48,47 @@
 
 ## What you can use it for
 
-Vigil is engineered for long-running headless tasks where you need to close your laptop lid, leave it on your desk, and prevent Windows from sleeping or thermal throttling:
+Vigil is engineered for headless compute tasks where you need to close your laptop lid, leave it on your desk, and prevent Windows from sleeping or thermal throttling:
 
 - **AI Agents & Model Inference**: Run Antigravity, Claude Code, Cursor, Ollama, LM Studio, ComfyUI, vLLM, or PyTorch pipelines overnight.
 - **3D Rendering & Simulation**: Leave Blender, Unreal Engine, Maya, or Cinema 4D renders churning without keeping the laptop open.
 - **Video Encoding & Exports**: Complete DaVinci Resolve, Adobe Premiere Pro, or Handbrake encodes in peace.
 - **Codebase Compilation**: Build large Rust, C++, .NET, or Android projects without accidental sleep interruptions.
-- **Batch Processing & Downloads**: Complete large multi-gigabyte cloud transfers and data ingestion jobs reliably.
+- **Batch Processing & Ingestion**: Complete large multi-gigabyte cloud transfers and data ingestion jobs reliably.
+
+---
+
+## How to cancel
+
+Vigil provides four immediate, fail-safe ways to cancel an active guard session:
+
+1. **Press `ESC` on your keyboard**: With the Vigil window open, pressing `ESC` instantly terminates the session and restores default Windows power policies.
+2. **Prominent Stop Button**: The right-side action button lights up in high-contrast vermillion: **`Stop (ESC)`**.
+3. **Master Hardware Switch**: Toggle the top-right switch in the flyout header to `OFF`.
+4. **Right-Click System Tray**: Right-clicking the taskbar notification icon presents **`🛑 Stop Protection [Restore Normal]`** in bold at the top of the menu.
+5. **Open the Laptop Lid**: Opening the physical laptop lid automatically restores the internal display panel backlight.
 
 ---
 
 ## Features
 
-- **Industrial Minimalist Interface**: Spacious, modern 320×395 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with flat, breathable telemetry rows. Zero AI-slop, clean human-crafted engineering.
-- **Master Hardware Toggle**: Top header switch toggles instant protection ON/OFF without requiring timer configuration.
-- **Process Supervisor (Auto-Armed)**: Automatically observes active compute pipelines (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`), arming into `GUARD ACTIVE` and reverting cleanly to `STANDBY` upon completion.
-- **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, display backlight sleeps naturally and wakes instantly on lid open.
-- **CPU Thermal Throttler**: Enforces a 92% maximum processor state cap (`PROCTHROTTLEMAX`), preventing Intel and AMD Turbo Boost voltage spikes while preserving full multi-core throughput.
-- **Wi-Fi Watchdog**: Periodically monitors local gateway ping latency and auto-reassociates dropped wireless profiles via `netsh` during headless operation.
-- **Idle Process Throttler**: Optionally suspends resource-hungry background applications (`slack.exe`, `discord.exe`, `spotify.exe`) via native `NtSuspendProcess` and resumes them on session end.
+- **Industrial Minimalist Interface**: Spacious 320 × 395 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with flat, breathable telemetry rows. 100% clean English typography with zero AI-slop.
+- **Master Hardware Switch**: Direct `ON` / `OFF` toggle in the top-right header for instant manual protection without configuring a timer.
+- **Quick Preset Chips**: Jump into `30m`, `1h`, `2h`, `4h`, or indefinite (`∞`) protection with a single click.
+- **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, the display backlight sleeps naturally and wakes instantly on lid open.
+- **CPU Thermal Throttler**: Enforces a 92% maximum processor state cap (`PROCTHROTTLEMAX`), preventing Intel and AMD Turbo Boost voltage spikes while preserving over 95% multi-core throughput. Core temperatures drop by 20°C to 25°C.
+- **Wi-Fi Watchdog**: Periodically monitors local gateway ping latency and auto-reassociates dropped wireless profiles via `netsh` during headless operation, with an inline toggle switch in the flyout.
+- **Background App Freezer**: Optionally suspends resource-hungry background applications (`slack.exe`, `discord.exe`, `spotify.exe`) via native `NtSuspendProcess` and resumes them when the session ends.
 - **Write-Ahead Recovery Journal**: All modified power settings are logged atomically to `%LOCALAPPDATA%\Vigil\recovery.json` alongside an out-of-process Task Scheduler watchdog to guarantee 100% restoration even across sudden power loss or reboots.
 
 ---
 
-## How to stop or cancel
-
-Vigil provides four immediate, fail-safe ways to cancel an active guard session:
-
-1. **Press `ESC` on your keyboard**: With the Vigil window open, pressing `ESC` instantly terminates the session and restores default Windows power policies.
-2. **Prominent Stop Button**: The action button lights up in high-contrast vermillion: **`Stop (ESC)`**.
-3. **Master Hardware Switch**: Toggle the top-right header switch to `OFF`.
-4. **Right-Click System Tray**: Right-clicking the taskbar tray icon presents **`🛑 Stop Protection [Restore Normal]`** in bold at the top of the menu.
-5. **Open the Laptop Lid**: Opening the laptop lid immediately restores the internal display panel backlight.
-
----
-
-## Install
-
-Requires Windows 10 (Build 19041+) or Windows 11 (including 24H2 Build 26100+).
+## Quick start
 
 ### Prebuilt release (recommended)
 
-1. Download the standalone `Vigil.exe` or portable zip archive from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
-2. Run `Vigil.exe`. The compact popover will appear near your taskbar notification area.
+1. Download `Vigil.exe` or `vigil-v1.0.0-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
+2. Run `Vigil.exe`. The popover appears near your system tray.
 
 ```powershell
 # Quick launch via PowerShell
@@ -106,6 +113,65 @@ dotnet publish src/Vigil/Vigil.csproj -c Release -r win-x64 --self-contained tru
 
 ---
 
+## Configuration
+
+Vigil stores its settings in `%LOCALAPPDATA%\Vigil\config.json`. The file is created automatically on first run:
+
+```json
+{
+  "general": {
+    "startWithWindows": false,
+    "defaultDurationSeconds": 7200,
+    "clamshellMode": true,
+    "turnDisplayOffOnSession": false,
+    "muteAudioOnLidClose": true
+  },
+  "thermal": {
+    "maxProcessorStatePercent": 92,
+    "emergencyTempThresholdCelsius": 80,
+    "emergencyThrottlePercent": 80,
+    "pollIntervalSeconds": 5
+  },
+  "battery": {
+    "ecoQoSFloorPercent": 40,
+    "safeHibernateFloorPercent": 15
+  },
+  "wifi": {
+    "watchdogEnabled": true,
+    "watchdogIntervalSeconds": 15,
+    "pingTarget": "1.1.1.1",
+    "priorityProfiles": [
+      "Home_Studio_5G",
+      "Phone_Hotspot"
+    ]
+  },
+  "freezer": {
+    "enabled": true,
+    "processNames": [
+      "slack",
+      "discord",
+      "whatsapp",
+      "spotify"
+    ]
+  },
+  "autoPilot": {
+    "enabled": true,
+    "watchProcesses": [
+      "antigravity.exe",
+      "claude.exe",
+      "cursor.exe",
+      "ollama.exe",
+      "python.exe",
+      "blender.exe",
+      "lmstudio.exe",
+      "jan.exe"
+    ]
+  }
+}
+```
+
+---
+
 ## What happens when the lid closes
 
 Closing a laptop lid on Windows normally triggers Modern Standby, suspending background user processes and disconnecting network sessions.
@@ -114,7 +180,7 @@ If you manually set lid action to "Do nothing" in Windows Control Panel, modern 
 
 Vigil resolves this:
 1. **Prevents Sleep**: Keeps user compute processes and active terminals running uninhibited via `SetThreadExecutionState`.
-2. **Suppresses Thermal Surges**: The 92% CPU ceiling disables Turbo Boost voltage spikes, reducing core temperatures by 20°C to 25°C while maintaining over 95% multi-threaded compute throughput.
+2. **Suppresses Thermal Surges**: The 92% CPU ceiling disables Turbo Boost voltage spikes, reducing core temperatures by 20°C to 25°C while maintaining full multi-threaded throughput.
 3. **Maintains Wireless Connectivity**: Automatically reassociates dropped Wi-Fi profiles if Windows disables the radio during headless operation.
 
 ---
