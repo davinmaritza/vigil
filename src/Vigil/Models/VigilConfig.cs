@@ -35,7 +35,7 @@ public class GeneralSettings
     public bool ClamshellMode { get; set; } = true;
 
     [JsonPropertyName("turnDisplayOffOnSession")]
-    public bool TurnDisplayOffOnSession { get; set; } = true;
+    public bool TurnDisplayOffOnSession { get; set; } = false;
 
     [JsonPropertyName("muteAudioOnLidClose")]
     public bool MuteAudioOnLidClose { get; set; } = true;

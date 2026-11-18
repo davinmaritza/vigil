@@ -36,6 +36,7 @@ public partial class FlyoutWindow : Window
         _coordinator.StateChanged += Coordinator_StateChanged;
         _thermal.TemperatureUpdated += Thermal_TemperatureUpdated;
         _wifi.StatusChanged += Wifi_StatusChanged;
+        PreviewKeyDown += FlyoutWindow_PreviewKeyDown;
 
         // Master Vigil protection toggle switch
         ChkMasterVigil.Checked += async (_, _) =>
@@ -142,27 +143,37 @@ public partial class FlyoutWindow : Window
                     if (!string.IsNullOrEmpty(_coordinator.ActiveTargetProcess))
                     {
                         TxtTargetProcess.Text = _coordinator.ActiveTargetProcess;
-                        TxtTargetDesc.Text = " • AI Generating";
-                        TxtAutoPilotBadge.Text = "AI ACTIVE";
+                        TxtTargetDesc.Text = " • Watching Process";
+                        TxtAutoPilotBadge.Text = "ACTIVE";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                     }
                     else
                     {
-                        TxtTargetProcess.Text = "Manual Session";
-                        TxtTargetDesc.Text = " • Clamshell Awake";
-                        TxtAutoPilotBadge.Text = "ACTIVE";
+                        TxtTargetProcess.Text = "Clamshell Protection";
+                        TxtTargetDesc.Text = " • Active";
+                        TxtAutoPilotBadge.Text = "GUARDING";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                     }
-                    TxtHeaderSub.Text = "Lid-Close Awake • Active";
+                    TxtHeaderSub.Text = "Clamshell Guard • Active";
+                    BtnEndSession.Content = "■ Hentikan [ESC]";
+                    BtnEndSession.Style = (Style)FindResource("BentoStopActiveBtn");
+                    BtnEndSession.ToolTip = "Hentikan proteksi dan kembalikan pengaturan power Windows normal";
+                    TxtEmergencyHint.Text = "💡 Klik di sini atau tekan ESC untuk mematikan proteksi";
+                    TxtEmergencyHint.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                 }
                 else
                 {
                     DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextDim");
-                    TxtTargetProcess.Text = "Vigil Guard";
+                    TxtTargetProcess.Text = "Hardware Guard";
                     TxtTargetDesc.Text = " • Standby";
-                    TxtAutoPilotBadge.Text = "AUTO-PILOT";
+                    TxtAutoPilotBadge.Text = "STANDBY";
                     TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
-                    TxtHeaderSub.Text = "Lid-Close Awake • Standby";
+                    TxtHeaderSub.Text = "Clamshell Guard • Standby";
+                    BtnEndSession.Content = "Tutup [ESC]";
+                    BtnEndSession.Style = (Style)FindResource("BentoDangerBtn");
+                    BtnEndSession.ToolTip = "Tutup jendela atau batalkan";
+                    TxtEmergencyHint.Text = "Mode Standby • Klik preset durasi untuk mulai";
+                    TxtEmergencyHint.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
                 }
             }
             finally
@@ -180,14 +191,14 @@ public partial class FlyoutWindow : Window
 
             if (_thermal.IsEmergencyThrottled)
             {
-                TxtTempStatus.Text = "Emergency Throttle!";
+                TxtTempStatus.Text = "Thermal Capped (80°C+)";
                 TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
             }
             else
             {
                 TxtTempStatus.Text = _thermal.CurrentCpuLoadPercent > 0 
-                    ? $"{_thermal.CurrentCpuLoadPercent}% Load • Cold" 
-                    : "Turbo OFF • Cold";
+                    ? $"{_thermal.CurrentCpuLoadPercent}% Load • 92% Cap" 
+                    : "Normal (92% Cap)";
                 TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
             }
 
@@ -195,12 +206,12 @@ public partial class FlyoutWindow : Window
             TxtWifiSsid.Text = string.IsNullOrEmpty(_wifi.CurrentConnectedSsid) ? "Not Connected" : _wifi.CurrentConnectedSsid;
             if (ChkAutoWifi.IsChecked == true)
             {
-                TxtWifiPing.Text = $"{_wifi.PingLatencyMs}ms • Auto-Reconnect ON";
+                TxtWifiPing.Text = $"{_wifi.PingLatencyMs}ms • Watchdog Active";
                 TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
             }
             else
             {
-                TxtWifiPing.Text = "Auto-Reconnect OFF • Manual";
+                TxtWifiPing.Text = "Watchdog Disabled";
                 TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
             }
 
@@ -313,6 +324,32 @@ public partial class FlyoutWindow : Window
             {
                 await _coordinator.StartSessionAsync(TimeSpan.FromSeconds(sec));
             }
+            RefreshUi();
+        }
+    }
+
+    private async void FlyoutWindow_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == System.Windows.Input.Key.Escape)
+        {
+            if (_coordinator.CurrentStatus == SessionStatus.Active)
+            {
+                await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
+                RefreshUi();
+            }
+            else
+            {
+                Hide();
+            }
+            e.Handled = true;
+        }
+    }
+
+    private async void PillEmergencyHint_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (_coordinator.CurrentStatus == SessionStatus.Active)
+        {
+            await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
             RefreshUi();
         }
     }

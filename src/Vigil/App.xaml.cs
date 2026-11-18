@@ -132,7 +132,7 @@ public partial class App : Application
         _trayIcon = new NotifyIcon
         {
             Icon = CreateTrayIcon(System.Drawing.Color.White), // Monochrome white icon
-            Text = "Vigil - Clamshell & Cooling Guard",
+            Text = "Vigil - Clamshell & Cooling Guard (Standby)",
             Visible = true
         };
 
@@ -144,26 +144,49 @@ public partial class App : Application
             }
         };
 
+        _coordinator!.StateChanged += (_, e) =>
+        {
+            if (_trayIcon != null)
+            {
+                if (e.Status == SessionStatus.Active)
+                {
+                    _trayIcon.Text = "Vigil: AKTIF (Proteksi Berjalan)\nKlik untuk membatalkan / buka dashboard";
+                }
+                else
+                {
+                    _trayIcon.Text = "Vigil: Standby (Klik untuk buka dashboard)";
+                }
+            }
+        };
+
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add("Open Vigil Dashboard", null, (_, _) => ShowFlyout());
+        
+        // 1. Prominent Emergency Cancel Option at top
+        var stopItem = new ToolStripMenuItem("🛑 Hentikan Proteksi [Kembalikan Normal]", null, async (_, _) =>
+        {
+            await _coordinator!.EndSessionAsync(SessionEndReason.UserRequested);
+            _flyout?.RefreshUi();
+        })
+        {
+            Font = new System.Drawing.Font(contextMenu.Font, System.Drawing.FontStyle.Bold)
+        };
+        contextMenu.Items.Add(stopItem);
         contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add("Start 1 Hour Session", null, async (_, _) =>
+
+        contextMenu.Items.Add("Buka Dashboard Vigil", null, (_, _) => ShowFlyout());
+        contextMenu.Items.Add(new ToolStripSeparator());
+        contextMenu.Items.Add("Mulai Sesi 1 Jam", null, async (_, _) =>
         {
             await _coordinator!.StartSessionAsync(TimeSpan.FromHours(1));
             _flyout?.RefreshUi();
         });
-        contextMenu.Items.Add("Start 2 Hours Session", null, async (_, _) =>
+        contextMenu.Items.Add("Mulai Sesi 2 Jam", null, async (_, _) =>
         {
             await _coordinator!.StartSessionAsync(TimeSpan.FromHours(2));
             _flyout?.RefreshUi();
         });
-        contextMenu.Items.Add("End Active Session", null, async (_, _) =>
-        {
-            await _coordinator!.EndSessionAsync(SessionEndReason.UserRequested);
-            _flyout?.RefreshUi();
-        });
         contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add("Exit Vigil", null, (_, _) => ExitApp());
+        contextMenu.Items.Add("Keluar dari Vigil", null, (_, _) => ExitApp());
 
         _trayIcon.ContextMenuStrip = contextMenu;
     }
@@ -250,6 +273,11 @@ public partial class App : Application
             try
             {
                 var targetPath = args.Length > 1 ? args[1] : "vigil_design_preview.png";
+                if (args.Length > 2 && args[2].ToLowerInvariant() == "active")
+                {
+                    await _coordinator!.StartSessionAsync(TimeSpan.FromHours(2));
+                }
+
                 var flyout = new FlyoutWindow(_coordinator!, _thermalThrottler!, _wifiWatchdog!, _processFreezer!, _config);
                 flyout.RefreshUi();
 

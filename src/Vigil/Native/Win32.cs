@@ -23,6 +23,11 @@ public static class Win32
     public const int MonitorOn = -1;
     public static readonly IntPtr HwndBroadcast = new(0xffff);
 
+    [DllImport("user32.dll")]
+    public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, int dwExtraInfo);
+
+    public const uint MouseEventfMove = 0x0001;
+
     [DllImport("user32.dll", SetLastError = true)]
     public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 

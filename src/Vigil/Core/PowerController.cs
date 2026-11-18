@@ -92,6 +92,9 @@ public class PowerController : IPowerController
             await _powerCfg.SetLidActionAsync(_originalDcLidAction.Value, onBattery: true, ct);
         }
 
+        // 3. Wake screen and synthesize user input signal
+        WakeScreen();
+
         _isApplied = false;
     }
 
@@ -107,12 +110,19 @@ public class PowerController : IPowerController
 
     public void WakeScreen()
     {
-        Win32.SendMessage(
-            Win32.HwndBroadcast,
-            Win32.WmSysCommand,
-            (IntPtr)Win32.ScMonitorPower,
-            (IntPtr)Win32.MonitorOn
-        );
+        try
+        {
+            Win32.SendMessage(
+                Win32.HwndBroadcast,
+                Win32.WmSysCommand,
+                (IntPtr)Win32.ScMonitorPower,
+                (IntPtr)Win32.MonitorOn
+            );
+            // Universal Windows display wakeup via 1px mouse nudge
+            Win32.mouse_event(Win32.MouseEventfMove, 0, 1, 0, 0);
+            Win32.mouse_event(Win32.MouseEventfMove, 0, unchecked((uint)-1), 0, 0);
+        }
+        catch { }
     }
 
     public async ValueTask DisposeAsync()

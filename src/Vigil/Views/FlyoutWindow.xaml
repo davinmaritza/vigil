@@ -49,14 +49,14 @@
                     <StackPanel VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="Vigil" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
-                            <Border x:Name="PillAutoBadge" Background="#1C1E26" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="4,1" VerticalAlignment="Center">
+                            <Border x:Name="PillAutoBadge" Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="5,1.5" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <Ellipse x:Name="DotStatus" Width="5" Height="5" Fill="{StaticResource BrushTextDim}" Margin="0,0,4,0" />
-                                    <TextBlock x:Name="TxtAutoPilotBadge" Text="AUTO-PILOT" FontFamily="{StaticResource FontMono}" FontSize="8" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" />
+                                    <TextBlock x:Name="TxtAutoPilotBadge" Text="STANDBY" FontFamily="{StaticResource FontMono}" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-                        <TextBlock x:Name="TxtHeaderSub" Text="Lid-Close Awake • Display Off" FontSize="9" Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBlock x:Name="TxtHeaderSub" Text="Clamshell Guard • Standby" FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" />
                     </StackPanel>
                 </StackPanel>
 
@@ -85,7 +85,7 @@
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
-                    <TextBlock x:Name="TxtTargetProcess" Text="Vigil Clamshell Guard" FontWeight="SemiBold" FontSize="11" Foreground="{StaticResource BrushTextSilver}" />
+                    <TextBlock x:Name="TxtTargetProcess" Text="Hardware Guard" FontWeight="SemiBold" FontSize="11" Foreground="{StaticResource BrushTextSilver}" />
                     <TextBlock x:Name="TxtTargetDesc" Text=" • Standby" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
                 </StackPanel>
 
@@ -101,13 +101,18 @@
                 <!-- Quick Action Buttons -->
                 <Grid Margin="0,0,0,2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="6" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" x:Name="BtnAdd30" Click="BtnAdd30_Click" Content="+30 Menit" Style="{StaticResource BentoActionBtn}" Height="30" />
-                    <Button Grid.Column="2" x:Name="BtnEndSession" Click="BtnEndSession_Click" Content="Akhiri" Style="{StaticResource BentoDangerBtn}" Height="30" />
+                    <Button Grid.Column="2" x:Name="BtnEndSession" Click="BtnEndSession_Click" Content="Hentikan [ESC]" Style="{StaticResource BentoDangerBtn}" Height="30" />
                 </Grid>
+
+                <!-- Emergency Cancel Hint (Visible prominently when active) -->
+                <Border x:Name="PillEmergencyHint" Background="#14FFFFFF" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="6,3.5" Margin="0,5,0,0" Cursor="Hand" MouseLeftButtonDown="PillEmergencyHint_MouseDown">
+                    <TextBlock x:Name="TxtEmergencyHint" Text="💡 Batal instan: Tekan ESC atau Buka Layar" FontSize="9" Foreground="{StaticResource BrushTextSilver}" HorizontalAlignment="Center" />
+                </Border>
             </StackPanel>
 
             <!-- 3: Divider -->
@@ -123,8 +128,8 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="CPU Temp" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,6,0" />
-                            <TextBlock x:Name="TxtTempStatus" Text="Turbo OFF • Cold" FontSize="10" Foreground="{StaticResource BrushTextDim}" />
+                            <TextBlock Text="CPU Package" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,6,0" />
+                            <TextBlock x:Name="TxtTempStatus" Text="Normal (92% Cap)" FontSize="10" Foreground="{StaticResource BrushTextDim}" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock x:Name="TxtTempDigits" Text="--°C" FontFamily="{StaticResource FontMono}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" VerticalAlignment="Center" />
@@ -146,10 +151,10 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Path Data="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C17.93 3.93 6.07 3.93 1 9zm8 8l3 3 3-3c-1.66-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.86 9.14 5 13z"
                                       Fill="{StaticResource BrushTextMuted}" Width="11" Height="11" Stretch="Uniform" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                <TextBlock Text="Auto-Reconnect" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,4,0" />
+                                <TextBlock Text="Wi-Fi Watchdog" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,4,0" />
                                 <TextBlock x:Name="TxtWifiSsid" Text="Connecting..." FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" TextTrimming="CharacterEllipsis" MaxWidth="75" />
                             </StackPanel>
-                            <TextBlock x:Name="TxtWifiPing" Text="14ms • Auto-Reconnect ON" FontSize="9" Foreground="{StaticResource BrushTextDim}" Margin="16,1,0,0" />
+                            <TextBlock x:Name="TxtWifiPing" Text="14ms • Watchdog Active" FontSize="9" Foreground="{StaticResource BrushTextDim}" Margin="16,1,0,0" />
                         </StackPanel>
                         <CheckBox Grid.Column="1" x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Enable automatic Wi-Fi reconnection guard" />
                     </Grid>
@@ -163,7 +168,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="TxtBatStatus" Text="⚡ AC Connected" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" />
+                            <TextBlock x:Name="TxtBatStatus" Text="⚡ AC Power" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="TxtBatPct" Text="88%" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
                                 <TextBlock x:Name="TxtBatRuntime" Text="Full Capacity" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
@@ -179,7 +184,7 @@
 
                     <!-- Row 4: Suspended Background Apps -->
                     <Grid Margin="0,5">
-                        <TextBlock Text="Suspended Apps:" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        <TextBlock Text="Idle Throttler:" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         <TextBlock x:Name="TxtFrozenApps" Text="none" FontFamily="{StaticResource FontMono}" FontSize="10" Foreground="{StaticResource BrushTextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="160" />
                     </Grid>
                 </StackPanel>
