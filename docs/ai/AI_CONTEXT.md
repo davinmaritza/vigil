@@ -18,6 +18,13 @@ Build and maintain an integrated Project Knowledge System connecting the Vigil r
 All features completed, tested, and published: Pure monochrome design system, high-contrast white system tray icon, window minimization, full window dragging, and comprehensive open-source README with credits.
 
 ## 3. Last Completed Work
+- **Master Vigil Protection Switch & AI Auto-Pilot Trigger**:
+  - Implemented an interactive Master Protection Switch in Row 1 of `FlyoutWindow.xaml` (`ChkMasterVigil`), allowing users to toggle Clamshell & Cooling protection directly ON or OFF without needing to pick preset time chips.
+  - Connected `ProcessWatcher` to detect running/generating AI tools (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`), automatically arming Vigil into `AI ACTIVE` mode when an AI workload starts and returning cleanly to `Standby` when the process completes.
+  - Added reentrancy guard (`_isSyncingMasterSwitch`) and user manual override protection ensuring user-initiated sessions remain active until explicitly dismissed.
+- **Wi-Fi Card Auto-Reconnect Clarification**:
+  - Added explicit "Auto-Reconnect" label alongside the Wi-Fi icon in `FlyoutWindow.xaml` to eliminate ambiguity.
+  - Connected the toggle switch to `VigilConfig.WiFi.WatchdogEnabled` and updated live status text dynamically: `${ping}ms • Auto-Reconnect ON` vs `Auto-Reconnect OFF • Manual`.
 - **High-Contrast White System Tray Icon**:
   - Resolved dark taskbar invisibility issue by generating dedicated high-contrast pure white 32x32 icon asset (`assets/tray-icon-32.png`).
   - Integrated native GDI+ `HICON` extraction in `App.xaml.cs` `CreateTrayIcon` ensuring crystal clear visibility in Windows 11 system tray and overflow menu.
