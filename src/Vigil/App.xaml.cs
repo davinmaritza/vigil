@@ -91,6 +91,9 @@ public partial class App : Application
         // Setup System Tray Icon
         SetupSystemTray();
 
+        // Show Flyout Window on launch
+        ShowFlyout();
+
         // Setup Auto-Pilot
         _processWatcher.TargetProcessStarted += async (_, procName) =>
         {
