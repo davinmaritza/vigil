@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <!-- Background: Pure Minimalist Canvas -->
+  <rect width="600" height="600" fill="#0A0D12" />
+
+  <!-- Center Graphic Group -->
+  <g transform="translate(300, 300)">
+    
+    <!-- Tilted Orbital Ring with saddle flares (Reference 2 fusion) -->
+    <!-- Tilted ~32deg ellipse with variable stroke & calligraphic pinch -->
+    <g transform="rotate(-32)">
+      <!-- Outer Orbit Back Half -->
+      <path d="M -180 0 C -180 -75, 180 -75, 180 0 C 180 75, -180 75, -180 0 Z"
+            fill="none"
+            stroke="#00D2EB"
+            stroke-width="5"
+            opacity="0.85" />
+
+      <!-- Orbit Core Glow Accent -->
+      <path d="M -120 0 C -120 -50, 120 -50, 120 0"
+            fill="none"
+            stroke="#10B981"
+            stroke-width="1.8"
+            opacity="0.6" />
+    </g>
+
+    <!-- Fused 'V' Letterform with Ref 1 Flared Swooshes & Negative Space Cutaways -->
+    <!-- Left Stalk: Sleek tapered spire -->
+    <path d="M -130 -160 
+             C -110 -60, -60 60, 0 150 
+             C -20 100, -65 10, -95 -60
+             C -115 -110, -125 -145, -130 -160 Z"
+          fill="#F8FAFC" />
+
+    <!-- Right Stalk: Dramatic sweeping calligraphic wing (Ref 1 homage) -->
+    <path d="M 0 150 
+             C 45 60, 105 -40, 140 -160
+             C 125 -100, 95 -20, 60 50
+             C 110 40, 170 85, 195 150
+             C 150 135, 90 120, 0 150 Z"
+          fill="#F8FAFC" />
+
+    <!-- Upper Aerodynamic Wing Spandrel (Ref 1 upper crescent) -->
+    <path d="M 35 -170 
+             C 65 -130, 80 -70, 70 -10 
+             C 45 -60, 20 -115, 35 -170 Z"
+          fill="#00D2EB" />
+
+    <!-- The 4-Pointed Sentinel Star (Vigilance & Wakefulness Glint) -->
+    <!-- Nestled at the dynamic focal center -->
+    <g transform="translate(-25, -10)">
+      <!-- 4-Pointed Star Shape -->
+      <path d="M 0 -45 
+               Q 0 0, -45 0 
+               Q 0 0, 0 45 
+               Q 0 0, 45 0 
+               Q 0 0, 0 -45 Z"
+            fill="#00D2EB" />
+      
+      <!-- Center Core Glint -->
+      <circle cx="0" cy="0" r="4.5" fill="#FFFFFF" />
+    </g>
+
+    <!-- Gravitational Saddle Flaring (Ref 2 signature pinch) -->
+    <path d="M -10 30 
+             C 10 35, 35 15, 45 -5 
+             C 35 15, 15 35, -10 30 Z"
+          fill="#10B981" />
+
+    <!-- Micro Precision Ticks / Coordinates -->
+    <circle cx="0" cy="150" r="3.5" fill="#00D2EB" />
+    <circle cx="-130" cy="-160" r="2.5" fill="#94A3B8" opacity="0.6" />
+    <circle cx="140" cy="-160" r="2.5" fill="#94A3B8" opacity="0.6" />
+  </g>
+</svg>

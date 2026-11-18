@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141C28" />
+      <stop offset="40%" stop-color="#0D131D" />
+      <stop offset="100%" stop-color="#070A0F" />
+    </linearGradient>
+
+    <!-- Bevel / Edge Rim Lighting -->
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#1E293B" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#00D2EB" stop-opacity="0.3" />
+    </linearGradient>
+
+    <!-- Core Eye Arc Gradient -->
+    <linearGradient id="eyeArcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7" />
+      <stop offset="50%" stop-color="#00D2EB" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+
+    <!-- Iris Glow Gradient -->
+    <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E0F2FE" />
+      <stop offset="25%" stop-color="#38BDF8" />
+      <stop offset="70%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#0B132B" stop-opacity="0.9" />
+    </radialGradient>
+
+    <!-- Pulse Glow Filter -->
+    <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur1" />
+      <feGaussianBlur stdDeviation="32" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Soft Drop Shadow for Tile -->
+    <filter id="tileShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="24" stdDeviation="32" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#00D2EB" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base Tile -->
+  <rect x="36" y="36" width="440" height="440" rx="108" ry="108"
+        fill="url(#bgGrad)"
+        stroke="url(#rimGrad)"
+        stroke-width="2.5"
+        filter="url(#tileShadow)" />
+
+  <!-- Inner Subtle Texture Lines / Sub-Grid -->
+  <g opacity="0.12" stroke="#94A3B8" stroke-width="1.2">
+    <circle cx="256" cy="256" r="170" fill="none" stroke-dasharray="4 8" />
+    <circle cx="256" cy="256" r="120" fill="none" stroke-dasharray="3 6" />
+  </g>
+
+  <!-- Sentinel Eye Protective Shell (Upper & Lower Eyelid / Clamshell) -->
+  <g filter="url(#coreGlow)">
+    <!-- Outer Sentinel Horizon Arcs -->
+    <path d="M 112 256 C 160 160, 352 160, 400 256 C 352 352, 160 352, 112 256 Z"
+          fill="none"
+          stroke="url(#eyeArcGrad)"
+          stroke-width="12"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+
+    <!-- Secondary Precision Wing Flaps (Clamshell / Shield Motif) -->
+    <path d="M 148 256 C 185 190, 327 190, 364 256"
+          fill="none"
+          stroke="#00D2EB"
+          stroke-width="3"
+          stroke-linecap="round"
+          opacity="0.6" />
+    <path d="M 148 256 C 185 322, 327 322, 364 256"
+          fill="none"
+          stroke="#10B981"
+          stroke-width="3"
+          stroke-linecap="round"
+          opacity="0.6" />
+
+    <!-- Cooling Sentinel Iris Outer Ring -->
+    <circle cx="256" cy="256" r="68"
+            fill="#060D17"
+            stroke="url(#eyeArcGrad)"
+            stroke-width="7" />
+
+    <!-- Radial Cooling Iris -->
+    <circle cx="256" cy="256" r="48"
+            fill="url(#irisGrad)" />
+
+    <!-- Unblinking Core Pupil / Wakefulness Crystal -->
+    <circle cx="256" cy="256" r="22"
+            fill="#FFFFFF" />
+
+    <!-- Specular Highlight Reflections -->
+    <circle cx="244" cy="244" r="8"
+            fill="#FFFFFF"
+            opacity="0.9" />
+    <circle cx="266" cy="266" r="4"
+            fill="#E0F2FE"
+            opacity="0.8" />
+  </g>
+
+  <!-- Vigil Thermal Tick Indicators (Top & Bottom Sentinel Marks) -->
+  <line x1="256" y1="116" x2="256" y2="136" stroke="#00D2EB" stroke-width="4" stroke-linecap="round" opacity="0.85" />
+  <line x1="256" y1="376" x2="256" y2="396" stroke="#10B981" stroke-width="4" stroke-linecap="round" opacity="0.85" />
+  <line x1="86" y1="256" x2="98" y2="256" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+  <line x1="414" y1="256" x2="426" y2="256" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+</svg>

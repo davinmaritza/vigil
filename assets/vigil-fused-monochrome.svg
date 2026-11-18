@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <!-- White Canvas (Matching user's reference images) -->
+  <rect width="600" height="600" fill="#FFFFFF" />
+
+  <g transform="translate(300, 300)">
+    <!-- 1. The Tilted Orbital Ring with varying line weight & pinched cusps (Reference 2) -->
+    <g transform="rotate(-38)">
+      <!-- Outer Elliptical Orbit Loop -->
+      <path d="M -190 0 
+               C -190 -85, 190 -85, 190 0 
+               C 190 85, -190 85, -190 0 Z"
+            fill="none"
+            stroke="#000000"
+            stroke-width="7" />
+
+      <!-- Center Saddle Pinch (The gravitational event horizon from Ref 2) -->
+      <path d="M -15 -4 
+               C -5 -25, 0 -35, 12 -55 
+               C 5 -30, 2 -18, 15 -4 
+               C 2 8, -5 25, -12 55 
+               C -2 30, 0 15, -15 -4 Z"
+            fill="#000000" />
+    </g>
+
+    <!-- 2. The Monogram 'V' with Avant-Garde Calligraphic Flare (Reference 1) -->
+    
+    <!-- Upper Floating Crescent / Sail Blade (Ref 1 top wing) -->
+    <path d="M 15 -180 
+             C 45 -135, 60 -75, 52 -15 
+             C 32 -65, 8 -115, 15 -180 Z"
+          fill="#000000" />
+
+    <!-- Left Tapered Leg & Foot Cusp -->
+    <path d="M -155 140 
+             C -110 140, -85 105, -70 65 
+             C -90 100, -125 125, -155 140 Z"
+          fill="#000000" />
+
+    <!-- Main Left-to-Center Diagonal Backbone -->
+    <path d="M -125 -145 
+             C -95 -50, -45 55, 0 140 
+             C -18 95, -55 10, -80 -55 
+             C -102 -100, -118 -130, -125 -145 Z"
+          fill="#000000" />
+
+    <!-- Right Sweeping Wave Stalk ending in Sharp Horizon Fluke (Ref 1 right stem) -->
+    <path d="M 0 140 
+             C 40 55, 95 -35, 125 -145 
+             C 112 -90, 80 -15, 50 50 
+             C 95 40, 150 80, 185 140 
+             C 135 125, 75 115, 0 140 Z"
+          fill="#000000" />
+
+    <!-- 3. The 4-Pointed Sentinel Star (Reference 1) nestled in negative space -->
+    <g transform="translate(-40, -5)">
+      <path d="M 0 -48 
+               Q 0 0, -48 0 
+               Q 0 0, 0 48 
+               Q 0 0, 48 0 
+               Q 0 0, 0 -48 Z"
+            fill="#000000" />
+    </g>
+  </g>
+</svg>

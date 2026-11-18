@@ -1,0 +1,146 @@
+{
+  "src/Vigil/App.xaml": {
+    "mtime": 1794978539.780751,
+    "seen": 1794979572.8462288,
+    "ast_hash": "f830bc579de23743a873b44d3dc98707",
+    "semantic_hash": "f830bc579de23743a873b44d3dc98707"
+  },
+  "src/Vigil/App.xaml.cs": {
+    "mtime": 1794979055.1999702,
+    "seen": 1794979572.8462288,
+    "ast_hash": "e4f1b4f56dd7781b284bbb3de883eed0",
+    "semantic_hash": "e4f1b4f56dd7781b284bbb3de883eed0"
+  },
+  "src/Vigil/Core/Contracts/IProcessWatcher.cs": {
+    "mtime": 1794978489.5655534,
+    "seen": 1794979572.8462288,
+    "ast_hash": "0452fe91875fcb31ad5977870386b0ca",
+    "semantic_hash": "0452fe91875fcb31ad5977870386b0ca"
+  },
+  "src/Vigil/Core/Contracts/ISessionCoordinator.cs": {
+    "mtime": 1794978243.561079,
+    "seen": 1794979572.8462288,
+    "ast_hash": "0ba80e07fb713f81e32ab269fe448b2a",
+    "semantic_hash": "0ba80e07fb713f81e32ab269fe448b2a"
+  },
+  "src/Vigil/Core/Contracts/ISystemModifier.cs": {
+    "mtime": 1794978236.7314038,
+    "seen": 1794979572.8462288,
+    "ast_hash": "9fff0b77d472f2e04b4ccdab4d6b9668",
+    "semantic_hash": "9fff0b77d472f2e04b4ccdab4d6b9668"
+  },
+  "src/Vigil/Core/PowerController.cs": {
+    "mtime": 1794978325.1109588,
+    "seen": 1794979572.8462288,
+    "ast_hash": "069bc1963836e6f7af7c6df738811ff4",
+    "semantic_hash": "069bc1963836e6f7af7c6df738811ff4"
+  },
+  "src/Vigil/Core/ProcessFreezer.cs": {
+    "mtime": 1794978358.6139662,
+    "seen": 1794979572.8462288,
+    "ast_hash": "1f2afb898385caf002416393b375b18e",
+    "semantic_hash": "1f2afb898385caf002416393b375b18e"
+  },
+  "src/Vigil/Core/ProcessWatcher.cs": {
+    "mtime": 1794978400.094846,
+    "seen": 1794979572.8462288,
+    "ast_hash": "40403dc450c9607c243dc573eda2302d",
+    "semantic_hash": "40403dc450c9607c243dc573eda2302d"
+  },
+  "src/Vigil/Core/RecoveryJournal.cs": {
+    "mtime": 1794978301.4678059,
+    "seen": 1794979572.8462288,
+    "ast_hash": "bb0f77929aec0bc9e2b02c325845f42e",
+    "semantic_hash": "bb0f77929aec0bc9e2b02c325845f42e"
+  },
+  "src/Vigil/Core/SessionCoordinator.cs": {
+    "mtime": 1794978444.569042,
+    "seen": 1794979572.8462288,
+    "ast_hash": "f6a19fe0a11ec285aea0a6f089845753",
+    "semantic_hash": "f6a19fe0a11ec285aea0a6f089845753"
+  },
+  "src/Vigil/Core/ThermalThrottler.cs": {
+    "mtime": 1794978341.2441652,
+    "seen": 1794979572.8462288,
+    "ast_hash": "2458b7fdcec57775d3de0b464d78f394",
+    "semantic_hash": "2458b7fdcec57775d3de0b464d78f394"
+  },
+  "src/Vigil/Core/WiFiWatchdog.cs": {
+    "mtime": 1794978520.2565002,
+    "seen": 1794979572.8462288,
+    "ast_hash": "31dd5a820683b827f98be9ef30293a30",
+    "semantic_hash": "31dd5a820683b827f98be9ef30293a30"
+  },
+  "src/Vigil/Models/RecoveryData.cs": {
+    "mtime": 1794978208.4565768,
+    "seen": 1794979572.8462288,
+    "ast_hash": "b9e70db2561d3f675e6cb03643d63418",
+    "semantic_hash": "b9e70db2561d3f675e6cb03643d63418"
+  },
+  "src/Vigil/Models/VigilConfig.cs": {
+    "mtime": 1794978201.1427808,
+    "seen": 1794979572.8462288,
+    "ast_hash": "bd6f8d88c6426560b2fc65bed011e425",
+    "semantic_hash": "bd6f8d88c6426560b2fc65bed011e425"
+  },
+  "src/Vigil/Native/PowerCfgRunner.cs": {
+    "mtime": 1794978509.8993733,
+    "seen": 1794979572.8462288,
+    "ast_hash": "10d975bda5e5d2363a96a3ecaa94b3d5",
+    "semantic_hash": "10d975bda5e5d2363a96a3ecaa94b3d5"
+  },
+  "src/Vigil/Native/Win32.cs": {
+    "mtime": 1794978783.4204524,
+    "seen": 1794979572.8462288,
+    "ast_hash": "2f359d4dcfb7d3f7e9520e346590ecff",
+    "semantic_hash": "2f359d4dcfb7d3f7e9520e346590ecff"
+  },
+  "src/Vigil/Views/FlyoutWindow.xaml": {
+    "mtime": 1794978570.199931,
+    "seen": 1794979572.8462288,
+    "ast_hash": "8696a88c8cd6d43517011f85598269b5",
+    "semantic_hash": "8696a88c8cd6d43517011f85598269b5"
+  },
+  "src/Vigil/Views/FlyoutWindow.xaml.cs": {
+    "mtime": 1794978584.1558087,
+    "seen": 1794979572.8462288,
+    "ast_hash": "307561b662b6105614d73e1413a47c9c",
+    "semantic_hash": "307561b662b6105614d73e1413a47c9c"
+  },
+  "src/Vigil/Vigil.csproj": {
+    "mtime": 1794978718.438699,
+    "seen": 1794979572.8462288,
+    "ast_hash": "7abfd01a1e0590eee33923e90a765c8a",
+    "semantic_hash": "7abfd01a1e0590eee33923e90a765c8a"
+  },
+  "tests/Vigil.Tests/PowerSettingParsingTests.cs": {
+    "mtime": 1794978645.093784,
+    "seen": 1794979572.8462288,
+    "ast_hash": "2bc26d0ddc6b2eb932c6ccca741cbd40",
+    "semantic_hash": "2bc26d0ddc6b2eb932c6ccca741cbd40"
+  },
+  "tests/Vigil.Tests/RecoveryJournalTests.cs": {
+    "mtime": 1794978635.379047,
+    "seen": 1794979572.8462288,
+    "ast_hash": "762eafd3edc9e9cc749e97ef6913131d",
+    "semantic_hash": "762eafd3edc9e9cc749e97ef6913131d"
+  },
+  "tests/Vigil.Tests/Vigil.Tests.csproj": {
+    "mtime": 1794978738.6819086,
+    "seen": 1794979572.8462288,
+    "ast_hash": "98a1aee488d4b251c169dc0a9ac69be8",
+    "semantic_hash": "98a1aee488d4b251c169dc0a9ac69be8"
+  },
+  "README.md": {
+    "mtime": 1794979302.0608306,
+    "seen": 1794979572.8462288,
+    "ast_hash": "3ccffd2e1e815c082b0ff60b67a3f95f",
+    "semantic_hash": "3ccffd2e1e815c082b0ff60b67a3f95f"
+  },
+  "docs/mockups/vigil-ui-mockup.html": {
+    "mtime": 1794978019.7984474,
+    "seen": 1794979572.8462288,
+    "ast_hash": "70e13cd8a15362f0ffad6fe06765a346",
+    "semantic_hash": "70e13cd8a15362f0ffad6fe06765a346"
+  }
+}

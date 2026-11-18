@@ -1,0 +1,214 @@
+{
+  "nodes": [
+    {
+      "id": "readme_vigil",
+      "label": "Vigil Application Specification",
+      "file_type": "document",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_clamshell_mode",
+      "label": "Clamshell Lid-Close Mode",
+      "file_type": "rationale",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_thermal_throttler",
+      "label": "Thermal Throttling & Turbo Boost Suppression",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_wifi_watchdog",
+      "label": "Wi-Fi Watchdog & Auto-Reconnect",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_process_freezer",
+      "label": "Process Freezer (NtSuspendProcess)",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_auto_pilot",
+      "label": "Auto-Pilot Process Trigger",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_crash_recovery_journal",
+      "label": "Write-Ahead Crash Recovery Journal",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mockups_vigil_ui_mockup_bento_grid",
+      "label": "Fluent Bento Grid UI Mockup",
+      "file_type": "document",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\docs\\mockups\\vigil-ui-mockup.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "docs_mockups_vigil_ui_mockup_typography",
+      "label": "Plus Jakarta Sans & JetBrains Mono System",
+      "file_type": "concept",
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\docs\\mockups\\vigil-ui-mockup.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "readme_vigil",
+      "target": "src_vigil_app",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_clamshell_mode",
+      "target": "src_vigil_core_powercontroller",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_thermal_throttler",
+      "target": "src_vigil_core_thermalthrottler",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_wifi_watchdog",
+      "target": "src_vigil_core_wifiwatchdog",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_process_freezer",
+      "target": "src_vigil_core_processfreezer",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_auto_pilot",
+      "target": "src_vigil_core_processwatcher",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_crash_recovery_journal",
+      "target": "src_vigil_core_recoveryjournal",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mockups_vigil_ui_mockup_bento_grid",
+      "target": "src_vigil_views_flyoutwindow",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\docs\\mockups\\vigil-ui-mockup.html",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "docs_mockups_vigil_ui_mockup_typography",
+      "target": "src_vigil_views_flyoutwindow",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\docs\\mockups\\vigil-ui-mockup.html",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "vigil_core_subsystems",
+      "label": "Vigil Core Protection Subsystems",
+      "nodes": [
+        "src_vigil_core_powercontroller",
+        "src_vigil_core_thermalthrottler",
+        "src_vigil_core_wifiwatchdog",
+        "src_vigil_core_processfreezer",
+        "src_vigil_core_recoveryjournal"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "C:\\Users\\Despair\\Projects\\Web_and_AI\\insomnia\\README.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

@@ -1,0 +1,20 @@
+# Build and publish outputs
+bin/
+obj/
+dist/
+releases/
+*.pdb
+*.user
+
+# Cloned reference repo
+ref_repo/
+
+# IDE and OS
+.vs/
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+
+# Graphify intermediate/cache
+graphify-out/cache/
