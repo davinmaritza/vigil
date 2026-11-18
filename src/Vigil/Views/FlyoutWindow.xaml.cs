@@ -190,7 +190,7 @@ public partial class FlyoutWindow : Window
 
     private void BtnMinimizeFlyout_Click(object sender, RoutedEventArgs e)
     {
-        WindowState = WindowState.Minimized;
+        Hide();
     }
 
     private void BtnCloseFlyout_Click(object sender, RoutedEventArgs e)

@@ -315,10 +315,12 @@ public partial class App : Application
         try
         {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var icoPath = Path.Combine(baseDir, "icon.ico");
-            if (File.Exists(icoPath))
+            var whitePngPath = Path.Combine(baseDir, "tray-icon-32.png");
+            if (File.Exists(whitePngPath))
             {
-                return new Icon(icoPath, 32, 32);
+                using var pngBmp = (Bitmap)Image.FromFile(whitePngPath);
+                var hIcon = pngBmp.GetHicon();
+                return (Icon)Icon.FromHandle(hIcon).Clone();
             }
         }
         catch
@@ -339,8 +341,8 @@ public partial class App : Application
         using var starBrush = new SolidBrush(System.Drawing.Color.White);
         g.FillEllipse(starBrush, 14, 12, 4, 4);
 
-        var hIcon = bmp.GetHicon();
-        return (Icon)Icon.FromHandle(hIcon).Clone();
+        var fallbackHIcon = bmp.GetHicon();
+        return (Icon)Icon.FromHandle(fallbackHIcon).Clone();
     }
 
     private async void ExitApp()
