@@ -54,8 +54,12 @@ public partial class FlyoutWindow : Window
         RefreshUi();
     }
 
-    public void PositionNearTray()
+    private bool _hasUserMoved = false;
+
+    public void PositionNearTray(bool force = false)
     {
+        if (_hasUserMoved && !force) return;
+
         var screenWidth = SystemParameters.WorkArea.Width;
         var screenHeight = SystemParameters.WorkArea.Height;
 
@@ -194,13 +198,16 @@ public partial class FlyoutWindow : Window
         Hide();
     }
 
-    private void Header_MouseDown(object sender, MouseButtonEventArgs e)
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
         {
+            _hasUserMoved = true;
             DragMove();
         }
     }
+
+    private void Header_MouseDown(object sender, MouseButtonEventArgs e) => Window_MouseDown(sender, e);
 
     private async void BtnAdd30_Click(object sender, RoutedEventArgs e)
     {

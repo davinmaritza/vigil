@@ -174,6 +174,10 @@ dotnet test tests/Vigil.Tests/Vigil.Tests.csproj
 ```
 The suite verifies power parsing, registry fallbacks, journal write/read cycles, corruption tolerance, and process filter safety.
 
+## Acknowledgements
+
+- Inspired by [Insomnia](https://github.com/krishhgg/Insomnia) by [krishhgg](https://github.com/krishhgg) for the core concept of laptop clamshell awake utilities.
+
 ## License
 
 MIT License. See LICENSE for details.
