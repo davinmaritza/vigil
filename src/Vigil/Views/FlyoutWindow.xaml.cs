@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Vigil.Core;
 using Vigil.Core.Contracts;
+using Vigil.Models;
 using Vigil.Native;
 
 namespace Vigil.Views;
@@ -13,13 +14,16 @@ public partial class FlyoutWindow : Window
     private readonly IThermalThrottler _thermal;
     private readonly IWiFiWatchdog _wifi;
     private readonly IProcessFreezer _freezer;
+    private readonly VigilConfig _config;
     private bool _isInitializing = true;
+    private bool _isSyncingMasterSwitch = false;
 
     public FlyoutWindow(
         ISessionCoordinator coordinator,
         IThermalThrottler thermal,
         IWiFiWatchdog wifi,
-        IProcessFreezer freezer)
+        IProcessFreezer freezer,
+        VigilConfig config)
     {
         InitializeComponent();
 
@@ -27,10 +31,32 @@ public partial class FlyoutWindow : Window
         _thermal = thermal;
         _wifi = wifi;
         _freezer = freezer;
+        _config = config;
 
         _coordinator.StateChanged += Coordinator_StateChanged;
         _thermal.TemperatureUpdated += Thermal_TemperatureUpdated;
         _wifi.StatusChanged += Wifi_StatusChanged;
+
+        // Master Vigil protection toggle switch
+        ChkMasterVigil.Checked += async (_, _) =>
+        {
+            if (_isSyncingMasterSwitch || _isInitializing) return;
+            if (_coordinator.CurrentStatus != SessionStatus.Active)
+            {
+                await _coordinator.StartSessionAsync(null); // Infinite manual session
+                RefreshUi();
+            }
+        };
+
+        ChkMasterVigil.Unchecked += async (_, _) =>
+        {
+            if (_isSyncingMasterSwitch || _isInitializing) return;
+            if (_coordinator.CurrentStatus == SessionStatus.Active)
+            {
+                await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
+                RefreshUi();
+            }
+        };
 
         // Startup auto-launch checkbox initial state
         ChkAutoStart.IsChecked = StartupManager.IsRunOnStartupEnabled();
@@ -38,14 +64,27 @@ public partial class FlyoutWindow : Window
         ChkAutoStart.Unchecked += (_, _) => StartupManager.SetRunOnStartup(false);
 
         // Wi-Fi watchdog checkbox
-        ChkAutoWifi.IsChecked = _wifi.IsApplied;
+        ChkAutoWifi.IsChecked = _config.WiFi.WatchdogEnabled;
         ChkAutoWifi.Checked += async (_, _) =>
         {
-            if (!_isInitializing) await _wifi.ApplyAsync();
+            _config.WiFi.WatchdogEnabled = true;
+            if (!_isInitializing)
+            {
+                if (_coordinator.CurrentStatus == SessionStatus.Active)
+                {
+                    await _wifi.ApplyAsync();
+                }
+                RefreshUi();
+            }
         };
         ChkAutoWifi.Unchecked += async (_, _) =>
         {
-            if (!_isInitializing) await _wifi.RevertAsync();
+            _config.WiFi.WatchdogEnabled = false;
+            if (!_isInitializing)
+            {
+                await _wifi.RevertAsync();
+                RefreshUi();
+            }
         };
 
         _isInitializing = false;
@@ -86,24 +125,49 @@ public partial class FlyoutWindow : Window
                 TxtTimerDigits.Text = "--:--:--";
             }
 
-            // 2. Status Strip & Dot
-            if (_coordinator.CurrentStatus == SessionStatus.Active)
+            // 2. Master Vigil Guard & AutoPilot Status
+            _isSyncingMasterSwitch = true;
+            try
             {
-                DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextWhite");
-                TxtTargetProcess.Text = _coordinator.ActiveTargetProcess ?? "Manual Session";
-                TxtTargetDesc.Text = " • Vigil Active";
-                TxtAutoPilotBadge.Text = "ACTIVE";
-                TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
-                TxtHeaderSub.Text = "Lid-Close Awake • Display Off";
+                var isActive = _coordinator.CurrentStatus == SessionStatus.Active;
+                ChkMasterVigil.IsChecked = isActive;
+                TxtMasterSwitchLabel.Text = isActive ? "ON" : "OFF";
+                TxtMasterSwitchLabel.Foreground = isActive
+                    ? (SolidColorBrush)FindResource("BrushTextWhite")
+                    : (SolidColorBrush)FindResource("BrushTextDim");
+
+                if (isActive)
+                {
+                    DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextWhite");
+                    if (!string.IsNullOrEmpty(_coordinator.ActiveTargetProcess))
+                    {
+                        TxtTargetProcess.Text = $"AI Active: {_coordinator.ActiveTargetProcess}";
+                        TxtTargetDesc.Text = "Lid-Close Awake Active • AI Generating";
+                        TxtAutoPilotBadge.Text = "AI ACTIVE";
+                        TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    }
+                    else
+                    {
+                        TxtTargetProcess.Text = "Vigil Clamshell Guard";
+                        TxtTargetDesc.Text = "Lid-Close Awake Active • Display Off";
+                        TxtAutoPilotBadge.Text = "ACTIVE";
+                        TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    }
+                    TxtHeaderSub.Text = "Lid-Close Awake • Display Off";
+                }
+                else
+                {
+                    DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextDim");
+                    TxtTargetProcess.Text = "Vigil Clamshell Guard";
+                    TxtTargetDesc.Text = "Standby • Auto-arms when AI generates or switch ON";
+                    TxtAutoPilotBadge.Text = "AUTO-PILOT";
+                    TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
+                    TxtHeaderSub.Text = "No Session Running";
+                }
             }
-            else
+            finally
             {
-                DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextDim");
-                TxtTargetProcess.Text = "Standby";
-                TxtTargetDesc.Text = " • System Normal";
-                TxtAutoPilotBadge.Text = "IDLE";
-                TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
-                TxtHeaderSub.Text = "No Session Running";
+                _isSyncingMasterSwitch = false;
             }
 
             // 3. Thermal State
@@ -128,8 +192,17 @@ public partial class FlyoutWindow : Window
             }
 
             // 4. Wi-Fi
-            TxtWifiSsid.Text = _wifi.CurrentConnectedSsid;
-            TxtWifiPing.Text = $"{_wifi.PingLatencyMs}ms • Watchdog On";
+            TxtWifiSsid.Text = string.IsNullOrEmpty(_wifi.CurrentConnectedSsid) ? "Not Connected" : _wifi.CurrentConnectedSsid;
+            if (ChkAutoWifi.IsChecked == true)
+            {
+                TxtWifiPing.Text = $"{_wifi.PingLatencyMs}ms • Auto-Reconnect ON";
+                TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
+            }
+            else
+            {
+                TxtWifiPing.Text = "Auto-Reconnect OFF • Manual";
+                TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
+            }
 
             // 5. Freezer
             if (_freezer.SuspendedProcessNames.Count > 0)

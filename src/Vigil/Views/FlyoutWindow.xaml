@@ -63,23 +63,29 @@
                 </StackPanel>
             </Grid>
 
-            <!-- 1: AutoPilot Strip -->
-            <Border Grid.Row="1" Background="{StaticResource BrushSurfaceCard}" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="12" Padding="12,9" Margin="0,0,0,10">
+            <!-- 1: Master Vigil Guard & AutoPilot Strip -->
+            <Border Grid.Row="1" Background="{StaticResource BrushSurfaceCard}" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="14" Padding="12,10" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse x:Name="DotStatus" Width="8" Height="8" Fill="{StaticResource BrushTextWhite}" Margin="0,0,8,0" />
-                        <TextBlock x:Name="TxtTargetProcess" Text="blender.exe" FontWeight="Bold" FontSize="12" Foreground="{StaticResource BrushTextWhite}" />
-                        <TextBlock x:Name="TxtTargetDesc" Text=" • Rendering Active" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
+                    <StackPanel VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse x:Name="DotStatus" Width="8" Height="8" Fill="{StaticResource BrushTextDim}" Margin="0,0,8,0" />
+                            <TextBlock x:Name="TxtTargetProcess" Text="Vigil Clamshell Guard" FontWeight="Bold" FontSize="12" Foreground="{StaticResource BrushTextWhite}" />
+                            <Border x:Name="PillAutoBadge" Background="#1C1E26" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtAutoPilotBadge" Text="AUTO-PILOT" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock x:Name="TxtTargetDesc" Text="Standby • Auto-arms when AI generates or switch ON" FontSize="11" Foreground="{StaticResource BrushTextMuted}" Margin="16,2,0,0" />
                     </StackPanel>
 
-                    <Border Grid.Column="1" Background="#1C1E26" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="6" Padding="7,3">
-                        <TextBlock x:Name="TxtAutoPilotBadge" Text="AUTO-PILOT" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" />
-                    </Border>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtMasterSwitchLabel" Text="OFF" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextDim}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                        <CheckBox x:Name="ChkMasterVigil" Style="{StaticResource BentoToggleSwitch}" IsChecked="False" VerticalAlignment="Center" ToolTip="Toggle Vigil Clamshell &amp; Cooling Guard ON / OFF" />
+                    </StackPanel>
                 </Grid>
             </Border>
 
@@ -108,13 +114,16 @@
                 <!-- Wi-Fi Box -->
                 <Border Grid.Column="2" Background="{StaticResource BrushSurfaceCard}" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="14" Padding="12">
                     <StackPanel>
-                        <Grid Margin="0,0,0,4">
-                            <Path Data="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C17.93 3.93 6.07 3.93 1 9zm8 8l3 3 3-3c-1.66-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.86 9.14 5 13z"
-                                  Fill="{StaticResource BrushTextWhite}" Width="15" Height="15" Stretch="Uniform" HorizontalAlignment="Left" />
-                            <CheckBox x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                        <Grid Margin="0,0,0,6">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Path Data="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C17.93 3.93 6.07 3.93 1 9zm8 8l3 3 3-3c-1.66-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.86 9.14 5 13z"
+                                      Fill="{StaticResource BrushTextWhite}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                <TextBlock Text="Auto-Reconnect" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <CheckBox x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Enable automatic Wi-Fi reconnection guard" />
                         </Grid>
                         <TextBlock x:Name="TxtWifiSsid" Text="Home_Studio_5G" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" TextTrimming="CharacterEllipsis" Margin="0,2" />
-                        <TextBlock x:Name="TxtWifiPing" Text="14ms • Watchdog On" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBlock x:Name="TxtWifiPing" Text="14ms • Auto-Reconnect ON" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
                     </StackPanel>
                 </Border>
             </Grid>

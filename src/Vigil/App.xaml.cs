@@ -32,6 +32,15 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        AppDomain.CurrentDomain.UnhandledException += (s, ev) =>
+        {
+            try { File.WriteAllText("crash.log", ev.ExceptionObject.ToString()); } catch { }
+        };
+        DispatcherUnhandledException += (s, ev) =>
+        {
+            try { File.WriteAllText("crash.log", ev.Exception.ToString()); } catch { }
+        };
+
         // Load configuration
         LoadConfig();
 
@@ -86,7 +95,7 @@ public partial class App : Application
         await CheckCrashRecoveryAsync();
 
         // Initialize UI Flyout
-        _flyout = new FlyoutWindow(_coordinator, _thermalThrottler, _wifiWatchdog, _processFreezer);
+        _flyout = new FlyoutWindow(_coordinator, _thermalThrottler, _wifiWatchdog, _processFreezer, _config);
 
         // Setup System Tray Icon
         SetupSystemTray();
@@ -103,8 +112,11 @@ public partial class App : Application
 
         _processWatcher.TargetProcessExited += async (_, _) =>
         {
-            await _coordinator.EndSessionAsync(SessionEndReason.TargetProcessExited);
-            _flyout?.RefreshUi();
+            if (_coordinator.ActiveTargetProcess != null)
+            {
+                await _coordinator.EndSessionAsync(SessionEndReason.TargetProcessExited);
+                _flyout?.RefreshUi();
+            }
         };
 
         _processWatcher.Start();

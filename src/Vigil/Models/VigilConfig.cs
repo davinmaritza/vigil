@@ -107,10 +107,13 @@ public class AutoPilotSettings
     [JsonPropertyName("watchProcesses")]
     public List<string> WatchProcesses { get; set; } = new()
     {
-        "blender.exe",
+        "antigravity.exe",
+        "claude.exe",
+        "cursor.exe",
         "ollama.exe",
         "python.exe",
-        "claude.exe",
-        "antigravity.exe"
+        "blender.exe",
+        "lmstudio.exe",
+        "jan.exe"
     };
 }
