@@ -15,9 +15,8 @@
 <p align="center">
   <a href="#quick-start"><strong>Quick Start</strong></a> ·
   <a href="#what-you-can-use-it-for"><strong>Use Cases</strong></a> ·
-  <a href="#ui-overview"><strong>UI Overview</strong></a> ·
-  <a href="#how-to-cancel"><strong>How to Cancel</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
+  <a href="#how-to-cancel"><strong>How to Cancel</strong></a> ·
   <a href="#configuration"><strong>Configuration</strong></a> ·
   <a href="#cli-and-automation"><strong>CLI & Automation</strong></a> 
 </p>
@@ -29,17 +28,8 @@
   <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.0" src="https://img.shields.io/badge/Release-v1.0.0-536D78?style=flat-square"></a>
 </p>
 
----
-
-## UI Overview
-
 <p align="center">
-  <img src="docs/images/vigil-ui-active.png" alt="Vigil Active Guard State" width="310">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="docs/images/vigil-ui-standby.png" alt="Vigil Standby State" width="310">
-</p>
-
-<p align="center">
-  <em>Left: Active Guard session with live countdown and high-contrast Stop button. Right: Clean standby mode.</em>
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Minimalist Popover UI" width="320">
 </p>
 
 > **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
