@@ -3,24 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
-        <!-- Pure Monochrome (Black & White) Design Tokens -->
-        <Color x:Key="ColorSurfaceBase">#0B0C0E</Color>
-        <Color x:Key="ColorSurfaceCard">#13141B</Color>
-        <Color x:Key="ColorSurfaceCardHover">#1A1C24</Color>
-        <Color x:Key="ColorBorderHairline">#14FFFFFF</Color>
-        <Color x:Key="ColorBorderLight">#26FFFFFF</Color>
-        <Color x:Key="ColorBorderActive">#4DFFFFFF</Color>
+        <!-- High-End Minimalist Design Tokens (Dieter Rams / Apple macOS Menubar Inspired) -->
+        <Color x:Key="ColorSurfaceBase">#131417</Color>
+        <Color x:Key="ColorSurfaceCard">#1A1C20</Color>
+        <Color x:Key="ColorSurfaceCardHover">#22242A</Color>
+        <Color x:Key="ColorBorderHairline">#0EFFFFFF</Color>
+        <Color x:Key="ColorBorderLight">#1BFFFFFF</Color>
+        <Color x:Key="ColorBorderActive">#38FFFFFF</Color>
 
-        <!-- Monochrome Text & Accent Palette -->
-        <Color x:Key="ColorTextWhite">#FFFFFF</Color>
-        <Color x:Key="ColorTextSilver">#D4D7E0</Color>
-        <Color x:Key="ColorTextMuted">#868C9E</Color>
-        <Color x:Key="ColorTextDim">#4A5060</Color>
+        <!-- Sophisticated Charcoal & Moon-White Palette (No Harsh Neons) -->
+        <Color x:Key="ColorTextWhite">#F0F1F4</Color>
+        <Color x:Key="ColorTextSilver">#C2C6D1</Color>
+        <Color x:Key="ColorTextMuted">#787E8E</Color>
+        <Color x:Key="ColorTextDim">#444957</Color>
 
-        <!-- Aliased Accents for Pure Black & White Contrast -->
-        <Color x:Key="ColorAccentCyan">#FFFFFF</Color>
-        <Color x:Key="ColorAccentLime">#FFFFFF</Color>
-        <Color x:Key="ColorAccentEmerald">#FFFFFF</Color>
+        <Color x:Key="ColorAccentCyan">#F0F1F4</Color>
+        <Color x:Key="ColorAccentLime">#F0F1F4</Color>
+        <Color x:Key="ColorAccentEmerald">#F0F1F4</Color>
         <Color x:Key="ColorAccentRose">#CCCCCC</Color>
 
         <SolidColorBrush x:Key="BrushSurfaceBase" Color="{StaticResource ColorSurfaceBase}" />
@@ -40,34 +39,34 @@
         <SolidColorBrush x:Key="BrushAccentEmerald" Color="{StaticResource ColorAccentEmerald}" />
         <SolidColorBrush x:Key="BrushAccentRose" Color="{StaticResource ColorAccentRose}" />
 
-        <FontFamily x:Key="FontPlusJakarta">Plus Jakarta Sans, Segoe UI, sans-serif</FontFamily>
+        <FontFamily x:Key="FontPlusJakarta">Plus Jakarta Sans, Segoe UI Variable Text, Segoe UI, sans-serif</FontFamily>
         <FontFamily x:Key="FontMono">JetBrains Mono, Consolas, monospace</FontFamily>
 
-        <!-- Tactile Monochrome Bento Toggle Switch -->
+        <!-- Precision Hardware Toggle Switch (30x16) -->
         <Style x:Key="BentoToggleSwitch" TargetType="CheckBox">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="CheckBox">
-                        <Grid Width="32" Height="18">
+                        <Grid Width="30" Height="16">
                             <Border x:Name="BackgroundBorder" 
-                                    Background="#181A22" 
-                                    BorderBrush="#26FFFFFF" 
+                                    Background="#1D1F25" 
+                                    BorderBrush="#25FFFFFF" 
                                     BorderThickness="1" 
-                                    CornerRadius="9" />
+                                    CornerRadius="8" />
                             <Ellipse x:Name="Thumb" 
-                                     Width="12" Height="12" 
-                                     Fill="#6E7485" 
+                                     Width="10" Height="10" 
+                                     Fill="#606676" 
                                      HorizontalAlignment="Left" 
-                                     Margin="3,0,0,0" />
+                                     Margin="2.5,0,0,0" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="BackgroundBorder" Property="Background" Value="#FFFFFF" />
-                                <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="#FFFFFF" />
-                                <Setter TargetName="Thumb" Property="Fill" Value="#0B0C0E" />
+                                <Setter TargetName="BackgroundBorder" Property="Background" Value="#EDEDF0" />
+                                <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="#EDEDF0" />
+                                <Setter TargetName="Thumb" Property="Fill" Value="#131417" />
                                 <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right" />
-                                <Setter TargetName="Thumb" Property="Margin" Value="0,0,3,0" />
+                                <Setter TargetName="Thumb" Property="Margin" Value="0,0,2.5,0" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="BackgroundBorder" Property="Opacity" Value="0.9" />
@@ -78,18 +77,18 @@
             </Setter>
         </Style>
 
-        <!-- Bento Preset Button -->
+        <!-- Minimalist Preset Chip Button (Insomnia Style) -->
         <Style x:Key="BentoPresetBtn" TargetType="Button">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontFamily" Value="{StaticResource FontPlusJakarta}" />
             <Setter Property="FontSize" Value="11" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="{StaticResource BrushTextSilver}" />
-            <Setter Property="Background" Value="#10FFFFFF" />
+            <Setter Property="Background" Value="#0DFFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{StaticResource BrushBorderHairline}" />
-            <Setter Property="Padding" Value="0,6" />
-            <Setter Property="Margin" Value="2" />
+            <Setter Property="Padding" Value="0,5" />
+            <Setter Property="Margin" Value="1.5" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -97,17 +96,17 @@
                                 Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="8">
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#22FFFFFF" />
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#1CFFFFFF" />
                                 <Setter TargetName="BtnBorder" Property="BorderBrush" Value="{StaticResource BrushBorderLight}" />
                                 <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#33FFFFFF" />
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#2AFFFFFF" />
                                 <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -116,30 +115,30 @@
             </Setter>
         </Style>
 
-        <!-- Bento Action Primary Button (Solid White) -->
+        <!-- Primary Action Button (Moon White Solid) -->
         <Style x:Key="BentoActionBtn" TargetType="Button">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontFamily" Value="{StaticResource FontPlusJakarta}" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="11.5" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Foreground" Value="#0B0C0E" />
-            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="#131417" />
+            <Setter Property="Background" Value="#EDEDF0" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="0,9" />
+            <Setter Property="Padding" Value="0,6" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="ActionBorder" 
                                 Background="{TemplateBinding Background}" 
-                                CornerRadius="10">
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ActionBorder" Property="Background" Value="#E5E7EB" />
+                                <Setter TargetName="ActionBorder" Property="Background" Value="#FFFFFF" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ActionBorder" Property="Background" Value="#D1D5DB" />
+                                <Setter TargetName="ActionBorder" Property="Background" Value="#D8D9DE" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -147,17 +146,17 @@
             </Setter>
         </Style>
 
-        <!-- Bento Monochrome End/Cancel Button -->
+        <!-- Secondary / Cancel Button (Subtle Charcoal) -->
         <Style x:Key="BentoDangerBtn" TargetType="Button">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontFamily" Value="{StaticResource FontPlusJakarta}" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="11.5" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="{StaticResource BrushTextSilver}" />
-            <Setter Property="Background" Value="#161820" />
+            <Setter Property="Background" Value="#16181D" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{StaticResource BrushBorderLight}" />
-            <Setter Property="Padding" Value="0,9" />
+            <Setter Property="Padding" Value="0,6" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -165,17 +164,17 @@
                                 Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="10">
+                                CornerRadius="6">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="DangerBorder" Property="Background" Value="#222532" />
+                                <Setter TargetName="DangerBorder" Property="Background" Value="#22252C" />
                                 <Setter TargetName="DangerBorder" Property="BorderBrush" Value="{StaticResource BrushBorderActive}" />
                                 <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="DangerBorder" Property="Background" Value="#101116" />
+                                <Setter TargetName="DangerBorder" Property="Background" Value="#111215" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -188,22 +187,22 @@
             <Setter Property="Width" Value="22" />
             <Setter Property="Height" Value="22" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="#12FFFFFF" />
+            <Setter Property="Background" Value="#0DFFFFFF" />
             <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="BtnBorder" Background="{TemplateBinding Background}" CornerRadius="6">
+                        <Border x:Name="BtnBorder" Background="{TemplateBinding Background}" CornerRadius="5">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#26FFFFFF" />
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#20FFFFFF" />
                                 <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="BtnBorder" Property="Background" Value="#38FFFFFF" />
+                                <Setter TargetName="BtnBorder" Property="Background" Value="#30FFFFFF" />
                                 <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
