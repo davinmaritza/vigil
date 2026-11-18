@@ -240,6 +240,39 @@ public partial class App : Application
             return;
         }
 
+        if (cmd == "--screenshot")
+        {
+            try
+            {
+                var targetPath = args.Length > 1 ? args[1] : "vigil_design_preview.png";
+                var flyout = new FlyoutWindow(_coordinator!, _thermalThrottler!, _wifiWatchdog!, _processFreezer!, _config);
+                flyout.RefreshUi();
+
+                var border = (FrameworkElement)flyout.Content;
+                flyout.Content = null;
+
+                border.Measure(new System.Windows.Size(316, 465));
+                border.Arrange(new Rect(0, 0, 316, 465));
+                border.UpdateLayout();
+
+                var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(316, 465, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                rtb.Render(border);
+
+                var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+                encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+
+                using (var fs = File.Create(targetPath))
+                {
+                    encoder.Save(fs);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error capturing screenshot: {ex.Message}");
+            }
+            return;
+        }
+
         if (cmd == "--recover")
         {
             var recovered = await CheckCrashRecoveryAsync();
