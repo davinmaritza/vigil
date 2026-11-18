@@ -16,5 +16,10 @@ ref_repo/
 Thumbs.db
 Desktop.ini
 
-# Graphify intermediate/cache
-graphify-out/cache/
+# AI Agent & local tooling artifacts
+.agents/
+docs/ai/
+graphify-out/
+AGENTS.md
+CLAUDE.md
+*.log
