@@ -15,9 +15,17 @@
 Build and maintain an integrated Project Knowledge System connecting the Vigil repository, vendor-neutral project rules (`docs/ai/PROJECT_RULES.md`), native AI instructions (`AGENTS.md`), and Notion.
 
 ## 2. Current Work
-Pure monochrome (Black & White) design system overhaul, window minimization control, draggable window header, and taskbar window integration completed.
+All features completed, tested, and published: Pure monochrome design system, high-contrast white system tray icon, window minimization, full window dragging, and comprehensive open-source README with credits.
 
 ## 3. Last Completed Work
+- **High-Contrast White System Tray Icon**:
+  - Resolved dark taskbar invisibility issue by generating dedicated high-contrast pure white 32x32 icon asset (`assets/tray-icon-32.png`).
+  - Integrated native GDI+ `HICON` extraction in `App.xaml.cs` `CreateTrayIcon` ensuring crystal clear visibility in Windows 11 system tray and overflow menu.
+  - Set `BtnMinimizeFlyout_Click` to cleanly hide window into System Tray.
+- **Open-Source README & Credits Overhaul**:
+  - Modernized `README.md` following the standard set by `krishhgg/Insomnia`, tailored for Windows.
+  - Added hero header with centered monochrome logo, navigation links, flat-square badges, technical `<details>` dropdowns, and automated Star History chart.
+  - Added prominent **Acknowledgements** section crediting `krishhgg/Insomnia`.
 - **Pure Monochrome (Black & White) Design Overhaul**:
   - Replaced all colorful accents (cyan, lime, emerald, rose, amber) with high-contrast monochrome design tokens (`#0B0C0E` base, `#13141B` card, `#FFFFFF` pure white text/active states, `#D4D7E0` silver, `#868C9E` muted, `#4A5060` dim).
   - Redesigned tactile `BentoToggleSwitch` into high-contrast monochrome: dark track with gray thumb when off; pure white track with deep obsidian thumb when active.
