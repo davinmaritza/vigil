@@ -141,28 +141,28 @@ public partial class FlyoutWindow : Window
                     DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextWhite");
                     if (!string.IsNullOrEmpty(_coordinator.ActiveTargetProcess))
                     {
-                        TxtTargetProcess.Text = $"AI Active: {_coordinator.ActiveTargetProcess}";
-                        TxtTargetDesc.Text = "Lid-Close Awake Active • AI Generating";
+                        TxtTargetProcess.Text = _coordinator.ActiveTargetProcess;
+                        TxtTargetDesc.Text = " • AI Generating";
                         TxtAutoPilotBadge.Text = "AI ACTIVE";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                     }
                     else
                     {
-                        TxtTargetProcess.Text = "Vigil Clamshell Guard";
-                        TxtTargetDesc.Text = "Lid-Close Awake Active • Display Off";
+                        TxtTargetProcess.Text = "Manual Session";
+                        TxtTargetDesc.Text = " • Clamshell Awake";
                         TxtAutoPilotBadge.Text = "ACTIVE";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                     }
-                    TxtHeaderSub.Text = "Lid-Close Awake • Display Off";
+                    TxtHeaderSub.Text = "Lid-Close Awake • Active";
                 }
                 else
                 {
                     DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextDim");
-                    TxtTargetProcess.Text = "Vigil Clamshell Guard";
-                    TxtTargetDesc.Text = "Standby • Auto-arms when AI generates or switch ON";
+                    TxtTargetProcess.Text = "Vigil Guard";
+                    TxtTargetDesc.Text = " • Standby";
                     TxtAutoPilotBadge.Text = "AUTO-PILOT";
                     TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
-                    TxtHeaderSub.Text = "No Session Running";
+                    TxtHeaderSub.Text = "Lid-Close Awake • Standby";
                 }
             }
             finally
