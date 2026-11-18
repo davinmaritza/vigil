@@ -15,9 +15,20 @@
 Build and maintain an integrated Project Knowledge System connecting the Vigil repository, vendor-neutral project rules (`docs/ai/PROJECT_RULES.md`), native AI instructions (`AGENTS.md`), and Notion.
 
 ## 2. Current Work
-Final brand identity fusion completed: **Konsep 2 (Flared Saddle Cusp & Kinetic Wings)** selected, multi-res Windows icon generated, UI and tray icon integrated, and release distribution re-published.
+Pure monochrome (Black & White) design system overhaul, window minimization control, draggable window header, and taskbar window integration completed.
 
 ## 3. Last Completed Work
+- **Pure Monochrome (Black & White) Design Overhaul**:
+  - Replaced all colorful accents (cyan, lime, emerald, rose, amber) with high-contrast monochrome design tokens (`#0B0C0E` base, `#13141B` card, `#FFFFFF` pure white text/active states, `#D4D7E0` silver, `#868C9E` muted, `#4A5060` dim).
+  - Redesigned tactile `BentoToggleSwitch` into high-contrast monochrome: dark track with gray thumb when off; pure white track with deep obsidian thumb when active.
+  - Redesigned battery progress bar to pure white fill with subtle dark track.
+  - End session button (`BentoDangerBtn`) transitioned to clean monochrome bordered button.
+  - Fallback tray icon procedurally updated to pure white.
+- **Window Minimize & Shell Integration**:
+  - Added dedicated Minimize button (`BtnMinimizeFlyout`) in header with clean horizontal bar glyph alongside Close button (`BtnCloseFlyout`).
+  - Enabled `ResizeMode="CanMinimize"` and `ShowInTaskbar="True"` for seamless taskbar window switching.
+  - Added draggable window header (`Header_MouseDown` -> `DragMove()`).
+  - Integrated un-minimize and activate logic when toggled from System Tray or Taskbar.
 - **Brand Identity & Iconography (Concept 2 Selected)**:
   - Fused avant-garde typographic monogram with aerodynamic orbital gyro ring and central 4-pointed sentinel star flare.
   - Generated multi-resolution Windows icon (`assets/icon.ico` & `src/Vigil/icon.ico`: 256, 128, 64, 48, 32, 16px).

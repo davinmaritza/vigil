@@ -111,7 +111,7 @@ public partial class App : Application
     {
         _trayIcon = new NotifyIcon
         {
-            Icon = CreateTrayIcon(System.Drawing.Color.FromArgb(0, 210, 235)), // Cyan eye
+            Icon = CreateTrayIcon(System.Drawing.Color.White), // Monochrome white icon
             Text = "Vigil - Clamshell & Cooling Guard",
             Visible = true
         };
@@ -151,6 +151,10 @@ public partial class App : Application
     private void ShowFlyout()
     {
         if (_flyout == null) return;
+        if (_flyout.WindowState == WindowState.Minimized)
+        {
+            _flyout.WindowState = WindowState.Normal;
+        }
         _flyout.PositionNearTray();
         _flyout.RefreshUi();
         _flyout.Show();
@@ -160,7 +164,7 @@ public partial class App : Application
     private void ToggleFlyout()
     {
         if (_flyout == null) return;
-        if (_flyout.IsVisible)
+        if (_flyout.IsVisible && _flyout.WindowState != WindowState.Minimized)
         {
             _flyout.Hide();
         }

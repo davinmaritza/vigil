@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Vigil.Core;
 using Vigil.Core.Contracts;
@@ -84,10 +85,11 @@ public partial class FlyoutWindow : Window
             // 2. Status Strip & Dot
             if (_coordinator.CurrentStatus == SessionStatus.Active)
             {
-                DotStatus.Fill = (SolidColorBrush)FindResource("BrushAccentEmerald");
+                DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextWhite");
                 TxtTargetProcess.Text = _coordinator.ActiveTargetProcess ?? "Manual Session";
                 TxtTargetDesc.Text = " • Vigil Active";
                 TxtAutoPilotBadge.Text = "ACTIVE";
+                TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                 TxtHeaderSub.Text = "Lid-Close Awake • Display Off";
             }
             else
@@ -96,6 +98,7 @@ public partial class FlyoutWindow : Window
                 TxtTargetProcess.Text = "Standby";
                 TxtTargetDesc.Text = " • System Normal";
                 TxtAutoPilotBadge.Text = "IDLE";
+                TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
                 TxtHeaderSub.Text = "No Session Running";
             }
 
@@ -110,14 +113,14 @@ public partial class FlyoutWindow : Window
             if (_thermal.IsEmergencyThrottled)
             {
                 TxtTempStatus.Text = "Emergency Throttle!";
-                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushAccentRose");
+                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
             }
             else
             {
                 TxtTempStatus.Text = _thermal.CurrentCpuLoadPercent > 0 
                     ? $"{_thermal.CurrentCpuLoadPercent}% Load • Cold" 
                     : "Turbo OFF • Cold";
-                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushAccentEmerald");
+                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
             }
 
             // 4. Wi-Fi
@@ -147,27 +150,16 @@ public partial class FlyoutWindow : Window
                 if (isAc)
                 {
                     TxtBatStatus.Text = "⚡ AC Connected";
-                    TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushAccentEmerald");
-                    ProgressBattery.Foreground = (SolidColorBrush)FindResource("BrushAccentEmerald");
+                    TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    ProgressBattery.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
                 }
                 else
                 {
                     TxtBatStatus.Text = "🔋 On Battery";
-                    if (pct <= 20)
-                    {
-                        TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushAccentRose");
-                        ProgressBattery.Foreground = (SolidColorBrush)FindResource("BrushAccentRose");
-                    }
-                    else if (pct <= 40)
-                    {
-                        TxtBatStatus.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(245, 158, 11)); // Amber
-                        ProgressBattery.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(245, 158, 11));
-                    }
-                    else
-                    {
-                        TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushAccentLime");
-                        ProgressBattery.Foreground = (SolidColorBrush)FindResource("BrushAccentLime");
-                    }
+                    TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    ProgressBattery.Foreground = pct <= 20 
+                        ? (SolidColorBrush)FindResource("BrushTextMuted") 
+                        : (SolidColorBrush)FindResource("BrushTextWhite");
                 }
 
                 if (power.BatteryLifeRemaining > 0 && !isAc)
@@ -192,9 +184,22 @@ public partial class FlyoutWindow : Window
     private void Thermal_TemperatureUpdated(object? sender, float e) => RefreshUi();
     private void Wifi_StatusChanged(object? sender, WiFiStatusChangedEventArgs e) => RefreshUi();
 
+    private void BtnMinimizeFlyout_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
     private void BtnCloseFlyout_Click(object sender, RoutedEventArgs e)
     {
         Hide();
+    }
+
+    private void Header_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton == MouseButton.Left)
+        {
+            DragMove();
+        }
     }
 
     private async void BtnAdd30_Click(object sender, RoutedEventArgs e)

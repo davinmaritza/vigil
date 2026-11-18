@@ -7,19 +7,20 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        ResizeMode="NoResize"
-        ShowInTaskbar="False"
+        ResizeMode="CanMinimize"
+        ShowInTaskbar="True"
+        Icon="pack://application:,,,/assets/icon.png"
         Topmost="True"
         FontFamily="{StaticResource FontPlusJakarta}">
 
     <!-- Window Outer DropShadow Canvas -->
     <Border Margin="14"
-            Background="#E610121A"
+            Background="#F20B0C0E"
             CornerRadius="24"
             BorderBrush="{StaticResource BrushBorderLight}"
             BorderThickness="1">
         <Border.Effect>
-            <DropShadowEffect BlurRadius="32" Direction="270" ShadowDepth="12" Opacity="0.75" Color="#000000" />
+            <DropShadowEffect BlurRadius="32" Direction="270" ShadowDepth="12" Opacity="0.85" Color="#000000" />
         </Border.Effect>
 
         <Grid Margin="18">
@@ -33,8 +34,8 @@
                 <RowDefinition Height="*" />    <!-- 6: Timer HUD & Actions -->
             </Grid.RowDefinitions>
 
-            <!-- 0: Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,12">
+            <!-- 0: Header (Draggable) -->
+            <Grid Grid.Row="0" Margin="0,0,0,12" Background="Transparent" MouseLeftButtonDown="Header_MouseDown">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -50,21 +51,15 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button Grid.Column="1" x:Name="BtnCloseFlyout" Click="BtnCloseFlyout_Click" Width="28" Height="28" Background="#14FFFFFF" BorderThickness="0" Foreground="{StaticResource BrushTextMuted}" Content="✕" Cursor="Hand">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="CloseBorder" Background="{TemplateBinding Background}" CornerRadius="14">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="CloseBorder" Property="Background" Value="#26FFFFFF" />
-                                    <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                <!-- Window Control Buttons (Minimize & Close) -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="BtnMinimizeFlyout" Click="BtnMinimizeFlyout_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Minimize" Margin="0,0,6,0">
+                        <Path Data="M4 14 H16" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="12" Height="12" Stretch="Uniform" />
+                    </Button>
+                    <Button x:Name="BtnCloseFlyout" Click="BtnCloseFlyout_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Close to Tray">
+                        <Path Data="M4 4 L16 16 M16 4 L4 16" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="10" Height="10" Stretch="Uniform" />
+                    </Button>
+                </StackPanel>
             </Grid>
 
             <!-- 1: AutoPilot Strip -->
@@ -76,13 +71,13 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Ellipse x:Name="DotStatus" Width="8" Height="8" Fill="{StaticResource BrushAccentEmerald}" Margin="0,0,8,0" />
+                        <Ellipse x:Name="DotStatus" Width="8" Height="8" Fill="{StaticResource BrushTextWhite}" Margin="0,0,8,0" />
                         <TextBlock x:Name="TxtTargetProcess" Text="blender.exe" FontWeight="Bold" FontSize="12" Foreground="{StaticResource BrushTextWhite}" />
                         <TextBlock x:Name="TxtTargetDesc" Text=" • Rendering Active" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
                     </StackPanel>
 
-                    <Border Grid.Column="1" Background="#2610B981" CornerRadius="6" Padding="6,2">
-                        <TextBlock x:Name="TxtAutoPilotBadge" Text="AUTO-PILOT" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushAccentEmerald}" />
+                    <Border Grid.Column="1" Background="#1C1E26" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="6" Padding="7,3">
+                        <TextBlock x:Name="TxtAutoPilotBadge" Text="AUTO-PILOT" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" />
                     </Border>
                 </Grid>
             </Border>
@@ -100,12 +95,12 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,4">
                             <TextBlock Text="CPU Temp" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" />
-                            <Border HorizontalAlignment="Right" Background="#2200D2EB" CornerRadius="4" Padding="5,1">
-                                <TextBlock x:Name="TxtPillThrottle" Text="CAP 92%" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushAccentCyan}" />
+                            <Border HorizontalAlignment="Right" Background="#1C1E26" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="6,2">
+                                <TextBlock x:Name="TxtPillThrottle" Text="CAP 92%" FontFamily="{StaticResource FontMono}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" />
                             </Border>
                         </Grid>
                         <TextBlock x:Name="TxtTempDigits" Text="64°C" FontFamily="{StaticResource FontMono}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,2" />
-                        <TextBlock x:Name="TxtTempStatus" Text="Turbo OFF • Cold" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushAccentEmerald}" />
+                        <TextBlock x:Name="TxtTempStatus" Text="Turbo OFF • Cold" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextSilver}" />
                     </StackPanel>
                 </Border>
 
@@ -114,7 +109,7 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,4">
                             <Path Data="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C17.93 3.93 6.07 3.93 1 9zm8 8l3 3 3-3c-1.66-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.86 9.14 5 13z"
-                                  Fill="{StaticResource BrushAccentCyan}" Width="15" Height="15" Stretch="Uniform" HorizontalAlignment="Left" />
+                                  Fill="{StaticResource BrushTextWhite}" Width="15" Height="15" Stretch="Uniform" HorizontalAlignment="Left" />
                             <CheckBox x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </Grid>
                         <TextBlock x:Name="TxtWifiSsid" Text="Home_Studio_5G" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" TextTrimming="CharacterEllipsis" Margin="0,2" />
@@ -128,15 +123,15 @@
                 <StackPanel>
                     <Grid Margin="0,0,0,6">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock x:Name="TxtBatStatus" Text="⚡ AC Connected" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BrushAccentLime}" Margin="0,0,6,0" />
+                            <TextBlock x:Name="TxtBatStatus" Text="⚡ AC Connected" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
                             <TextBlock x:Name="TxtBatPct" Text="88%" FontFamily="{StaticResource FontMono}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" />
                         </StackPanel>
                         <TextBlock x:Name="TxtBatRuntime" Text="~4h 20m left" FontSize="11" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Right" />
                     </Grid>
 
-                    <!-- Battery Bar -->
-                    <Border Height="8" Background="#1AFFFFFF" CornerRadius="4" ClipToBounds="True">
-                        <ProgressBar x:Name="ProgressBattery" Value="88" Maximum="100" Height="8" BorderThickness="0" Background="Transparent" Foreground="{StaticResource BrushAccentLime}" />
+                    <!-- Battery Bar (Pure Monochrome) -->
+                    <Border Height="8" Background="#14FFFFFF" CornerRadius="4" ClipToBounds="True">
+                        <ProgressBar x:Name="ProgressBattery" Value="88" Maximum="100" Height="8" BorderThickness="0" Background="Transparent" Foreground="{StaticResource BrushTextWhite}" />
                     </Border>
 
                     <Grid Margin="0,4,0,0">
@@ -165,10 +160,10 @@
             </Border>
 
             <!-- 5: Freezer Strip -->
-            <Border Grid.Row="5" Background="#0DFFFFFF" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="10" Padding="12,7" Margin="0,0,0,12">
+            <Border Grid.Row="5" Background="#0AFFFFFF" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="10" Padding="12,7" Margin="0,0,0,12">
                 <Grid>
                     <TextBlock Text="Suspended Apps:" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Left" />
-                    <TextBlock x:Name="TxtFrozenApps" Text="slack, discord, spotify" FontFamily="{StaticResource FontMono}" FontSize="11" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Right" />
+                    <TextBlock x:Name="TxtFrozenApps" Text="slack, discord, spotify" FontFamily="{StaticResource FontMono}" FontSize="11" Foreground="{StaticResource BrushTextSilver}" HorizontalAlignment="Right" />
                 </Grid>
             </Border>
 
