@@ -173,7 +173,7 @@ public partial class App : Application
         contextMenu.Items.Add(stopItem);
         contextMenu.Items.Add(new ToolStripSeparator());
 
-        contextMenu.Items.Add("Open Vigil Dashboard", null, (_, _) => ShowFlyout());
+        contextMenu.Items.Add("Open Vigil Menu", null, (_, _) => ShowFlyout());
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add("Start 1-Hour Session", null, async (_, _) =>
         {
@@ -185,6 +185,20 @@ public partial class App : Application
             await _coordinator!.StartSessionAsync(TimeSpan.FromHours(2));
             _flyout?.RefreshUi();
         });
+        contextMenu.Items.Add(new ToolStripSeparator());
+
+        var startWithWindowsItem = new ToolStripMenuItem("Start with Windows")
+        {
+            Checked = StartupManager.IsRunOnStartupEnabled()
+        };
+        startWithWindowsItem.Click += (_, _) =>
+        {
+            var newState = !startWithWindowsItem.Checked;
+            StartupManager.SetRunOnStartup(newState);
+            startWithWindowsItem.Checked = newState;
+        };
+        contextMenu.Items.Add(startWithWindowsItem);
+
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add("Exit Vigil", null, (_, _) => ExitApp());
 

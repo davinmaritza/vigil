@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2026-11-19
 
 ### Changed
-- **Minimalist & Spacious UI Overhaul**: Redesigned flyout popover to a clean, breathable 320 × 395 px layout inspired by Dieter Rams and Teenage Engineering. Stripped cramped double-nested card borders, thick battery progress bar, and warning hint banners in favor of flat rows separated by delicate hairlines.
+- **Compact Menu Bar Popover**: Redesigned flyout into an ultra-compact 268 × 208 px menu bar popover inspired by Insomnia macOS, replacing the oversized dashboard with an unobtrusive taskbar flyout.
+- **Minimalist Layout**: Stripped cramped double-nested card borders, thick battery progress bar, and warning hint banners in favor of flat rows with centered timer and 1-line micro telemetry.
 - **100% English Localization**: Replaced all Indonesian terminology across UI controls, status labels, tooltips, and tray menus with clean, idiomatic English (`+30m`, `Stop (ESC)`, `System Standby`, `Clamshell Guard Active`, `Start on boot`).
 - **Safe Display Handling**: Changed default `turnDisplayOffOnSession = false` so screens never turn black unexpectedly on session start while the laptop is actively in use on a desk. Backlight sleeps naturally only upon physical clamshell lid closure.
 - **Instant Display Wake**: Added a 1px synthetic mouse nudge to `WakeScreen()` to ensure Windows display drivers immediately restore backlight on lid open or session termination.

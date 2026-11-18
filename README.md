@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  A minimalist Windows system tray app and CLI for timed clamshell sessions, thermal throttling, and background workload protection. Built with an industrial interface inspired by Dieter Rams and Teenage Engineering. Vigil lives quietly in your taskbar notification area, keeping your laptop awake with the lid closed while preventing CPU thermal runaway during overnight AI agent runs, 3D rendering, or compilation jobs.
+  A minimalist Windows menu bar popover and CLI for timed clamshell sessions, thermal throttling, and background workload protection. Built with an industrial interface inspired by Insomnia macOS, Dieter Rams, and Teenage Engineering. Vigil lives quietly in your taskbar notification area, keeping your laptop awake with the lid closed while preventing CPU thermal runaway during overnight AI agent runs, 3D rendering, or compilation jobs.
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/vigil-ui-active.png" alt="Vigil Minimalist Popover UI" width="320">
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Compact Menu Bar Popover" width="268">
 </p>
 
 > **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
@@ -62,7 +62,7 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 ## Features
 
-- **Industrial Minimalist Interface**: Spacious 320 × 395 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with flat, breathable telemetry rows. 100% clean English typography with zero AI-slop.
+- **Compact Menu Bar Interface**: Ultra-sleek 268 × 208 px popover inspired by Insomnia on macOS, Dieter Rams, and Teenage Engineering. Floats right above your taskbar system tray with an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette. 100% clean English typography with zero AI-slop.
 - **Master Hardware Switch**: Direct `ON` / `OFF` toggle in the top-right header for instant manual protection without configuring a timer.
 - **Quick Preset Chips**: Jump into `30m`, `1h`, `2h`, `4h`, or indefinite (`∞`) protection with a single click.
 - **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, the display backlight sleeps naturally and wakes instantly on lid open.

@@ -60,35 +60,6 @@ public partial class FlyoutWindow : Window
             }
         };
 
-        // Startup auto-launch checkbox initial state
-        ChkAutoStart.IsChecked = StartupManager.IsRunOnStartupEnabled();
-        ChkAutoStart.Checked += (_, _) => StartupManager.SetRunOnStartup(true);
-        ChkAutoStart.Unchecked += (_, _) => StartupManager.SetRunOnStartup(false);
-
-        // Wi-Fi watchdog checkbox
-        ChkAutoWifi.IsChecked = _config.WiFi.WatchdogEnabled;
-        ChkAutoWifi.Checked += async (_, _) =>
-        {
-            _config.WiFi.WatchdogEnabled = true;
-            if (!_isInitializing)
-            {
-                if (_coordinator.CurrentStatus == SessionStatus.Active)
-                {
-                    await _wifi.ApplyAsync();
-                }
-                RefreshUi();
-            }
-        };
-        ChkAutoWifi.Unchecked += async (_, _) =>
-        {
-            _config.WiFi.WatchdogEnabled = false;
-            if (!_isInitializing)
-            {
-                await _wifi.RevertAsync();
-                RefreshUi();
-            }
-        };
-
         _isInitializing = false;
 
         PositionNearTray();
@@ -102,8 +73,8 @@ public partial class FlyoutWindow : Window
         var screenWidth = SystemParameters.WorkArea.Width;
         var screenHeight = SystemParameters.WorkArea.Height;
 
-        Left = screenWidth - Width - 16;
-        Top = screenHeight - Height - 8;
+        Left = screenWidth - Width - 12;
+        Top = screenHeight - Height - 6;
     }
 
     public void RefreshUi()
@@ -172,43 +143,39 @@ public partial class FlyoutWindow : Window
                 _isSyncingMasterSwitch = false;
             }
 
-            // 3. Thermal State
+            // 3. Thermal State (Micro)
             var temp = _thermal.CurrentCpuTempCelsius;
             TxtTempDigits.Text = temp > 0 ? $"{temp:F0}°C" : "--°C";
 
             if (_thermal.IsEmergencyThrottled)
             {
-                TxtTempStatus.Text = "Thermal Capped";
+                TxtTempStatus.Text = "Throttled";
                 TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
             }
             else
             {
-                TxtTempStatus.Text = _thermal.CurrentCpuLoadPercent > 0
-                    ? $"{_thermal.CurrentCpuLoadPercent}% Load • 92% Cap"
-                    : "Normal • 92% Cap";
-                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
+                TxtTempStatus.Text = $"{_thermal.CurrentMaxProcessorState}% Cap";
+                TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
             }
 
-            // 4. Wi-Fi Watchdog State
-            if (ChkAutoWifi.IsChecked != true)
+            // 4. Wi-Fi Watchdog State (Micro)
+            if (!_config.WiFi.WatchdogEnabled)
             {
-                TxtWifiStatus.Text = "Disabled";
+                TxtWifiStatus.Text = "Wi-Fi Off";
                 TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
             }
             else if (string.IsNullOrEmpty(_wifi.CurrentConnectedSsid))
             {
-                TxtWifiStatus.Text = "Disconnected";
+                TxtWifiStatus.Text = "Offline";
                 TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
             }
             else
             {
-                var ssid = _wifi.CurrentConnectedSsid;
-                var displaySsid = ssid.Length > 12 ? ssid[..10] + "…" : ssid;
-                TxtWifiStatus.Text = $"{_wifi.PingLatencyMs}ms ({displaySsid})";
+                TxtWifiStatus.Text = $"{_wifi.PingLatencyMs}ms";
                 TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
             }
 
-            // 5. Battery & Power Status
+            // 5. Battery & Power Status (Micro)
             try
             {
                 var power = System.Windows.Forms.SystemInformation.PowerStatus;
@@ -217,25 +184,16 @@ public partial class FlyoutWindow : Window
 
                 if (isAc)
                 {
-                    TxtBatStatus.Text = $"AC Power ({pct}%)";
+                    TxtBatStatus.Text = $"AC ({pct}%)";
                 }
                 else
                 {
-                    if (power.BatteryLifeRemaining > 0)
-                    {
-                        var hrs = power.BatteryLifeRemaining / 3600;
-                        var mins = (power.BatteryLifeRemaining % 3600) / 60;
-                        TxtBatStatus.Text = $"Battery {pct}% (~{hrs}h {mins}m)";
-                    }
-                    else
-                    {
-                        TxtBatStatus.Text = $"Battery ({pct}%)";
-                    }
+                    TxtBatStatus.Text = $"Bat ({pct}%)";
                 }
             }
             catch
             {
-                TxtBatStatus.Text = "AC Power (100%)";
+                TxtBatStatus.Text = "AC (100%)";
             }
         });
     }
