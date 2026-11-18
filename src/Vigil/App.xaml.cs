@@ -66,11 +66,16 @@ public partial class App : Application
         // Handle Command-Line Arguments
         if (e.Args.Length > 0)
         {
-            if (Win32.AttachConsole(Win32.AttachParentProcess))
+            try
             {
+                Win32.AttachConsole(Win32.AttachParentProcess);
                 var stdOut = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = true };
                 Console.SetOut(stdOut);
+                var stdErr = new StreamWriter(Console.OpenStandardError()) { AutoFlush = true };
+                Console.SetError(stdErr);
             }
+            catch { }
+
             await HandleCliArgumentsAsync(e.Args);
             Environment.Exit(0);
             return;
