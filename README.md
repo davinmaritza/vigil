@@ -51,7 +51,7 @@ Vigil is engineered for long-running headless tasks where you need to close your
 
 ## Features
 
-- **Industrial Minimalist Interface**: Compact 316×465 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with unified Grouped Inset telemetry rows. Zero AI-slop, clean human-crafted engineering.
+- **Industrial Minimalist Interface**: Spacious, modern 320×395 px popover inspired by Dieter Rams and Teenage Engineering. Uses an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette with flat, breathable telemetry rows. Zero AI-slop, clean human-crafted engineering.
 - **Master Hardware Toggle**: Top header switch toggles instant protection ON/OFF without requiring timer configuration.
 - **Process Supervisor (Auto-Armed)**: Automatically observes active compute pipelines (`antigravity.exe`, `claude.exe`, `cursor.exe`, `ollama.exe`, `python.exe`, `blender.exe`, `lmstudio.exe`, `jan.exe`), arming into `GUARD ACTIVE` and reverting cleanly to `STANDBY` upon completion.
 - **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, display backlight sleeps naturally and wakes instantly on lid open.
@@ -67,9 +67,9 @@ Vigil is engineered for long-running headless tasks where you need to close your
 Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 1. **Press `ESC` on your keyboard**: With the Vigil window open, pressing `ESC` instantly terminates the session and restores default Windows power policies.
-2. **Prominent Stop Button**: The right-side action button lights up in high-contrast vermillion: `■ Hentikan [ESC]`.
-3. **Interactive Cancel Banner**: Clicking the hint banner directly beneath the action buttons immediately aborts the session.
-4. **Right-Click System Tray**: Right-clicking the taskbar tray icon presents **`🛑 Hentikan Proteksi [Kembalikan Normal]`** in bold at the top of the menu.
+2. **Prominent Stop Button**: The action button lights up in high-contrast vermillion: **`Stop (ESC)`**.
+3. **Master Hardware Switch**: Toggle the top-right header switch to `OFF`.
+4. **Right-Click System Tray**: Right-clicking the taskbar tray icon presents **`🛑 Stop Protection [Restore Normal]`** in bold at the top of the menu.
 5. **Open the Laptop Lid**: Opening the laptop lid immediately restores the internal display panel backlight.
 
 ---

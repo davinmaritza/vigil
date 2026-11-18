@@ -150,11 +150,11 @@ public partial class App : Application
             {
                 if (e.Status == SessionStatus.Active)
                 {
-                    _trayIcon.Text = "Vigil: AKTIF (Proteksi Berjalan)\nKlik untuk membatalkan / buka dashboard";
+                    _trayIcon.Text = "Vigil: ACTIVE (Clamshell Guard)\nClick to open dashboard or cancel";
                 }
                 else
                 {
-                    _trayIcon.Text = "Vigil: Standby (Klik untuk buka dashboard)";
+                    _trayIcon.Text = "Vigil: Standby (Click to open dashboard)";
                 }
             }
         };
@@ -162,7 +162,7 @@ public partial class App : Application
         var contextMenu = new ContextMenuStrip();
         
         // 1. Prominent Emergency Cancel Option at top
-        var stopItem = new ToolStripMenuItem("🛑 Hentikan Proteksi [Kembalikan Normal]", null, async (_, _) =>
+        var stopItem = new ToolStripMenuItem("🛑 Stop Protection [Restore Normal]", null, async (_, _) =>
         {
             await _coordinator!.EndSessionAsync(SessionEndReason.UserRequested);
             _flyout?.RefreshUi();
@@ -173,20 +173,20 @@ public partial class App : Application
         contextMenu.Items.Add(stopItem);
         contextMenu.Items.Add(new ToolStripSeparator());
 
-        contextMenu.Items.Add("Buka Dashboard Vigil", null, (_, _) => ShowFlyout());
+        contextMenu.Items.Add("Open Vigil Dashboard", null, (_, _) => ShowFlyout());
         contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add("Mulai Sesi 1 Jam", null, async (_, _) =>
+        contextMenu.Items.Add("Start 1-Hour Session", null, async (_, _) =>
         {
             await _coordinator!.StartSessionAsync(TimeSpan.FromHours(1));
             _flyout?.RefreshUi();
         });
-        contextMenu.Items.Add("Mulai Sesi 2 Jam", null, async (_, _) =>
+        contextMenu.Items.Add("Start 2-Hour Session", null, async (_, _) =>
         {
             await _coordinator!.StartSessionAsync(TimeSpan.FromHours(2));
             _flyout?.RefreshUi();
         });
         contextMenu.Items.Add(new ToolStripSeparator());
-        contextMenu.Items.Add("Keluar dari Vigil", null, (_, _) => ExitApp());
+        contextMenu.Items.Add("Exit Vigil", null, (_, _) => ExitApp());
 
         _trayIcon.ContextMenuStrip = contextMenu;
     }
@@ -284,11 +284,13 @@ public partial class App : Application
                 var border = (FrameworkElement)flyout.Content;
                 flyout.Content = null;
 
-                border.Measure(new System.Windows.Size(316, 465));
-                border.Arrange(new Rect(0, 0, 316, 465));
+                var w = (int)flyout.Width;
+                var h = (int)flyout.Height;
+                border.Measure(new System.Windows.Size(w, h));
+                border.Arrange(new Rect(0, 0, w, h));
                 border.UpdateLayout();
 
-                var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(316, 465, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(w, h, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
                 rtb.Render(border);
 
                 var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();

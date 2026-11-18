@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Vigil"
-        Width="316"
-        Height="465"
+        Width="320"
+        Height="395"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -15,28 +15,28 @@
 
     <!-- Window Outer DropShadow Canvas (Draggable Anywhere) -->
     <Border Margin="10"
-            Background="#F50B0C0E"
-            CornerRadius="16"
+            Background="#F7121316"
+            CornerRadius="14"
             BorderBrush="{StaticResource BrushBorderLight}"
             BorderThickness="1"
             MouseLeftButtonDown="Window_MouseDown">
         <Border.Effect>
-            <DropShadowEffect BlurRadius="28" Direction="270" ShadowDepth="10" Opacity="0.85" Color="#000000" />
+            <DropShadowEffect BlurRadius="24" Direction="270" ShadowDepth="8" Opacity="0.75" Color="#000000" />
         </Border.Effect>
 
-        <Grid Margin="14,12">
+        <Grid Margin="16,14">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" /> <!-- 0: Minimalist MenuBar Header -->
+                <RowDefinition Height="Auto" /> <!-- 0: Minimalist Header -->
                 <RowDefinition Height="Auto" /> <!-- 1: Divider -->
-                <RowDefinition Height="Auto" /> <!-- 2: Countdown Timer Hero & Chips -->
+                <RowDefinition Height="Auto" /> <!-- 2: Hero Timer & Actions -->
                 <RowDefinition Height="Auto" /> <!-- 3: Divider -->
-                <RowDefinition Height="*" />    <!-- 4: Compact Status Menu Rows -->
+                <RowDefinition Height="*" />    <!-- 4: Clean Flat Status Rows -->
                 <RowDefinition Height="Auto" /> <!-- 5: Divider -->
                 <RowDefinition Height="Auto" /> <!-- 6: Minimalist Footer -->
             </Grid.RowDefinitions>
 
-            <!-- 0: Minimalist MenuBar Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,4" Background="Transparent" MouseLeftButtonDown="Header_MouseDown">
+            <!-- 0: Header (Spacious, Minimalist) -->
+            <Grid Grid.Row="0" Margin="0,0,0,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -46,29 +46,16 @@
                     <Border Width="22" Height="22" CornerRadius="6" Background="{StaticResource BrushSurfaceCard}" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" Margin="0,0,8,0" ClipToBounds="True">
                         <Image Source="pack://application:,,,/assets/icon.png" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" Margin="1" />
                     </Border>
-                    <StackPanel VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Vigil" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
-                            <Border x:Name="PillAutoBadge" Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="5,1.5" VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Ellipse x:Name="DotStatus" Width="5" Height="5" Fill="{StaticResource BrushTextDim}" Margin="0,0,4,0" />
-                                    <TextBlock x:Name="TxtAutoPilotBadge" Text="STANDBY" FontFamily="{StaticResource FontMono}" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" />
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-                        <TextBlock x:Name="TxtHeaderSub" Text="Clamshell Guard • Standby" FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" />
-                    </StackPanel>
+                    <TextBlock Text="Vigil" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <Border x:Name="PillAutoBadge" Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="5,1.5" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtAutoPilotBadge" Text="STANDBY" FontFamily="{StaticResource FontMono}" FontSize="8" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" />
+                    </Border>
                 </StackPanel>
 
-                <!-- Controls: Master Switch & Window Buttons -->
+                <!-- Controls: Master Switch & Close -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,8,0">
-                        <TextBlock x:Name="TxtMasterSwitchLabel" Text="OFF" FontFamily="{StaticResource FontMono}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextDim}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                        <CheckBox x:Name="ChkMasterVigil" Style="{StaticResource BentoToggleSwitch}" IsChecked="False" VerticalAlignment="Center" ToolTip="Toggle Vigil Clamshell Guard ON / OFF" />
-                    </StackPanel>
-                    <Button x:Name="BtnMinimizeFlyout" Click="BtnMinimizeFlyout_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Minimize to Tray" Margin="0,0,4,0">
-                        <Path Data="M4 12 H12" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="9" Height="9" Stretch="Uniform" />
-                    </Button>
+                    <TextBlock x:Name="TxtMasterSwitchLabel" Text="OFF" FontFamily="{StaticResource FontMono}" FontSize="9.5" FontWeight="Bold" Foreground="{StaticResource BrushTextDim}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <CheckBox x:Name="ChkMasterVigil" Style="{StaticResource BentoToggleSwitch}" IsChecked="False" VerticalAlignment="Center" ToolTip="Toggle Clamshell Guard ON / OFF" Margin="0,0,10,0" />
                     <Button x:Name="BtnCloseFlyout" Click="BtnCloseFlyout_Click" Style="{StaticResource WindowCtrlBtn}" ToolTip="Close to Tray">
                         <Path Data="M3 3 L11 11 M11 3 L3 11" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="8" Height="8" Stretch="Uniform" />
                     </Button>
@@ -76,21 +63,15 @@
             </Grid>
 
             <!-- 1: Divider -->
-            <Border Grid.Row="1" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,8,0,8" />
+            <Border Grid.Row="1" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,10,0,12" />
 
-            <!-- 2: Countdown Timer Hero & Chips (Insomnia Style) -->
-            <StackPanel Grid.Row="2" Margin="0,2,0,2">
-                <Grid Margin="0,0,0,2">
-                    <TextBlock x:Name="TxtTimerDigits" Text="--:--:--" FontFamily="{StaticResource FontMono}" FontSize="30" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Center" />
-                </Grid>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,8">
-                    <TextBlock x:Name="TxtTargetProcess" Text="Hardware Guard" FontWeight="SemiBold" FontSize="11" Foreground="{StaticResource BrushTextSilver}" />
-                    <TextBlock x:Name="TxtTargetDesc" Text=" • Standby" FontSize="11" Foreground="{StaticResource BrushTextMuted}" />
-                </StackPanel>
+            <!-- 2: Hero Countdown Timer & Presets -->
+            <StackPanel Grid.Row="2" Margin="0,0,0,2">
+                <TextBlock x:Name="TxtTimerDigits" Text="--:--:--" FontFamily="{StaticResource FontMono}" FontSize="32" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Center" Margin="0,0,0,2" />
+                <TextBlock x:Name="TxtTargetStatus" Text="System Standby" FontSize="11" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Center" Margin="0,0,0,12" />
 
                 <!-- Duration Preset Chips (Pills) -->
-                <UniformGrid Columns="5" Margin="0,0,0,8">
+                <UniformGrid Columns="5" Margin="0,0,0,10">
                     <Button Click="Preset_Click" Tag="1800" Content="30m" Style="{StaticResource BentoPresetBtn}" />
                     <Button Click="Preset_Click" Tag="3600" Content="1h" Style="{StaticResource BentoPresetBtn}" />
                     <Button Click="Preset_Click" Tag="7200" Content="2h" Style="{StaticResource BentoPresetBtn}" />
@@ -98,112 +79,66 @@
                     <Button Click="Preset_Click" Tag="-1" Content="∞" Style="{StaticResource BentoPresetBtn}" />
                 </UniformGrid>
 
-                <!-- Quick Action Buttons -->
+                <!-- Clean Action Buttons -->
                 <Grid Margin="0,0,0,2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="6" />
+                        <ColumnDefinition Width="8" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" x:Name="BtnAdd30" Click="BtnAdd30_Click" Content="+30 Menit" Style="{StaticResource BentoActionBtn}" Height="30" />
-                    <Button Grid.Column="2" x:Name="BtnEndSession" Click="BtnEndSession_Click" Content="Hentikan [ESC]" Style="{StaticResource BentoDangerBtn}" Height="30" />
+                    <Button Grid.Column="0" x:Name="BtnAdd30" Click="BtnAdd30_Click" Content="+30m" Style="{StaticResource BentoActionBtn}" Height="30" />
+                    <Button Grid.Column="2" x:Name="BtnEndSession" Click="BtnEndSession_Click" Content="Stop (ESC)" Style="{StaticResource BentoDangerBtn}" Height="30" />
                 </Grid>
-
-                <!-- Emergency Cancel Hint (Visible prominently when active) -->
-                <Border x:Name="PillEmergencyHint" Background="#14FFFFFF" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="6,3.5" Margin="0,5,0,0" Cursor="Hand" MouseLeftButtonDown="PillEmergencyHint_MouseDown">
-                    <TextBlock x:Name="TxtEmergencyHint" Text="💡 Batal instan: Tekan ESC atau Buka Layar" FontSize="9" Foreground="{StaticResource BrushTextSilver}" HorizontalAlignment="Center" />
-                </Border>
             </StackPanel>
 
             <!-- 3: Divider -->
-            <Border Grid.Row="3" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,8,0,6" />
+            <Border Grid.Row="3" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,12,0,8" />
 
-            <!-- 4: Compact Status Menu Group (Insomnia Grouped Inset Style) -->
-            <Border Grid.Row="4" Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="10,4" Margin="0,2,0,2">
-                <StackPanel>
-                    <!-- Row 1: CPU Temperature -->
-                    <Grid Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="CPU Package" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,6,0" />
-                            <TextBlock x:Name="TxtTempStatus" Text="Normal (92% Cap)" FontSize="10" Foreground="{StaticResource BrushTextDim}" />
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock x:Name="TxtTempDigits" Text="--°C" FontFamily="{StaticResource FontMono}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <Border Background="#20222A" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="4" Padding="4,1" VerticalAlignment="Center">
-                                <TextBlock x:Name="TxtPillThrottle" Text="CAP 92%" FontFamily="{StaticResource FontMono}" FontSize="8.5" FontWeight="Bold" Foreground="{StaticResource BrushTextSilver}" />
-                            </Border>
-                        </StackPanel>
-                    </Grid>
-
-                    <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,1" />
-
-                    <!-- Row 2: Wi-Fi Auto-Reconnect -->
-                    <Grid Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Path Data="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C17.93 3.93 6.07 3.93 1 9zm8 8l3 3 3-3c-1.66-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.86 9.14 5 13z"
-                                      Fill="{StaticResource BrushTextMuted}" Width="11" Height="11" Stretch="Uniform" Margin="0,0,5,0" VerticalAlignment="Center" />
-                                <TextBlock Text="Wi-Fi Watchdog" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" Margin="0,0,4,0" />
-                                <TextBlock x:Name="TxtWifiSsid" Text="Connecting..." FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" TextTrimming="CharacterEllipsis" MaxWidth="75" />
-                            </StackPanel>
-                            <TextBlock x:Name="TxtWifiPing" Text="14ms • Watchdog Active" FontSize="9" Foreground="{StaticResource BrushTextDim}" Margin="16,1,0,0" />
-                        </StackPanel>
-                        <CheckBox Grid.Column="1" x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" ToolTip="Enable automatic Wi-Fi reconnection guard" />
-                    </Grid>
-
-                    <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,1" />
-
-                    <!-- Row 3: Battery & Power Status -->
-                    <StackPanel Margin="0,5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="TxtBatStatus" Text="⚡ AC Power" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" />
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="TxtBatPct" Text="88%" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
-                                <TextBlock x:Name="TxtBatRuntime" Text="Full Capacity" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
-                            </StackPanel>
-                        </Grid>
-                        <!-- Mini Battery Progress Line -->
-                        <Border Height="2.5" Background="#14FFFFFF" CornerRadius="1.25" ClipToBounds="True" Margin="0,4,0,0">
-                            <ProgressBar x:Name="ProgressBattery" Value="88" Maximum="100" Height="2.5" BorderThickness="0" Background="Transparent" Foreground="{StaticResource BrushTextWhite}" />
-                        </Border>
+            <!-- 4: Clean Flat Status Rows (No heavy boxes, spacious & breathable) -->
+            <StackPanel Grid.Row="4" VerticalAlignment="Center">
+                <!-- Row 1: CPU Package -->
+                <Grid Margin="0,5">
+                    <TextBlock Text="CPU Package" FontSize="11" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtTempDigits" Text="--°C" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" Margin="0,0,6,0" />
+                        <TextBlock x:Name="TxtTempStatus" Text="92% Cap" FontFamily="{StaticResource FontMono}" FontSize="10" Foreground="{StaticResource BrushTextSilver}" VerticalAlignment="Center" />
                     </StackPanel>
+                </Grid>
 
-                    <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,1" />
+                <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,2" />
 
-                    <!-- Row 4: Suspended Background Apps -->
-                    <Grid Margin="0,5">
-                        <TextBlock Text="Idle Throttler:" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <TextBlock x:Name="TxtFrozenApps" Text="none" FontFamily="{StaticResource FontMono}" FontSize="10" Foreground="{StaticResource BrushTextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="160" />
-                    </Grid>
-                </StackPanel>
-            </Border>
+                <!-- Row 2: Wi-Fi Watchdog -->
+                <Grid Margin="0,5">
+                    <TextBlock Text="Wi-Fi Watchdog" FontSize="11" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtWifiStatus" Text="Connected (14ms)" FontFamily="{StaticResource FontMono}" FontSize="10.5" Foreground="{StaticResource BrushTextSilver}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <CheckBox x:Name="ChkAutoWifi" Style="{StaticResource BentoToggleSwitch}" IsChecked="True" VerticalAlignment="Center" ToolTip="Toggle Wi-Fi ping watchdog" />
+                    </StackPanel>
+                </Grid>
+
+                <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,2" />
+
+                <!-- Row 3: Power Source -->
+                <Grid Margin="0,5">
+                    <TextBlock Text="Power Source" FontSize="11" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtBatStatus" Text="AC Power (100%)" FontFamily="{StaticResource FontMono}" FontSize="10.5" Foreground="{StaticResource BrushTextSilver}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
 
             <!-- 5: Divider -->
-            <Border Grid.Row="5" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,8,0,6" />
+            <Border Grid.Row="5" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,8,0,8" />
 
             <!-- 6: Minimalist Footer -->
-            <Grid Grid.Row="6" Margin="0,2,0,0">
+            <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="⚙ Start with Windows" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                    <CheckBox x:Name="ChkAutoStart" Style="{StaticResource BentoToggleSwitch}" IsChecked="False" VerticalAlignment="Center" />
+                    <CheckBox x:Name="ChkAutoStart" Style="{StaticResource BentoToggleSwitch}" IsChecked="False" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Start on boot" FontSize="10" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
                 </StackPanel>
-                <TextBlock Grid.Column="1" Text="v1.0.0" FontFamily="{StaticResource FontMono}" FontSize="9" Foreground="{StaticResource BrushTextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="v1.0.0" FontFamily="{StaticResource FontMono}" FontSize="9.5" Foreground="{StaticResource BrushTextDim}" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </Grid>
 
         </Grid>

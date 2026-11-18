@@ -17,6 +17,7 @@ public partial class FlyoutWindow : Window
     private readonly VigilConfig _config;
     private bool _isInitializing = true;
     private bool _isSyncingMasterSwitch = false;
+    private bool _hasUserMoved = false;
 
     public FlyoutWindow(
         ISessionCoordinator coordinator,
@@ -94,8 +95,6 @@ public partial class FlyoutWindow : Window
         RefreshUi();
     }
 
-    private bool _hasUserMoved = false;
-
     public void PositionNearTray(bool force = false)
     {
         if (_hasUserMoved && !force) return;
@@ -111,12 +110,14 @@ public partial class FlyoutWindow : Window
     {
         Dispatcher.Invoke(() =>
         {
-            // 1. Session Timer
+            var isActive = _coordinator.CurrentStatus == SessionStatus.Active;
+
+            // 1. Session Countdown Timer
             if (_coordinator.IsInfiniteSession)
             {
                 TxtTimerDigits.Text = "∞";
             }
-            else if (_coordinator.CurrentStatus == SessionStatus.Active)
+            else if (isActive)
             {
                 var rem = _coordinator.RemainingTime;
                 TxtTimerDigits.Text = $"{rem.Hours:D2}:{rem.Minutes:D2}:{rem.Seconds:D2}";
@@ -126,11 +127,10 @@ public partial class FlyoutWindow : Window
                 TxtTimerDigits.Text = "--:--:--";
             }
 
-            // 2. Master Vigil Guard & AutoPilot Status
+            // 2. Master Vigil Guard & Target Status
             _isSyncingMasterSwitch = true;
             try
             {
-                var isActive = _coordinator.CurrentStatus == SessionStatus.Active;
                 ChkMasterVigil.IsChecked = isActive;
                 TxtMasterSwitchLabel.Text = isActive ? "ON" : "OFF";
                 TxtMasterSwitchLabel.Foreground = isActive
@@ -139,41 +139,32 @@ public partial class FlyoutWindow : Window
 
                 if (isActive)
                 {
-                    DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextWhite");
                     if (!string.IsNullOrEmpty(_coordinator.ActiveTargetProcess))
                     {
-                        TxtTargetProcess.Text = _coordinator.ActiveTargetProcess;
-                        TxtTargetDesc.Text = " • Watching Process";
                         TxtAutoPilotBadge.Text = "ACTIVE";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                        TxtTargetStatus.Text = $"Watching {_coordinator.ActiveTargetProcess}";
                     }
                     else
                     {
-                        TxtTargetProcess.Text = "Clamshell Protection";
-                        TxtTargetDesc.Text = " • Active";
                         TxtAutoPilotBadge.Text = "GUARDING";
                         TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                        TxtTargetStatus.Text = "Clamshell Guard Active";
                     }
-                    TxtHeaderSub.Text = "Clamshell Guard • Active";
-                    BtnEndSession.Content = "■ Hentikan [ESC]";
+
+                    BtnEndSession.Content = "Stop (ESC)";
                     BtnEndSession.Style = (Style)FindResource("BentoStopActiveBtn");
-                    BtnEndSession.ToolTip = "Hentikan proteksi dan kembalikan pengaturan power Windows normal";
-                    TxtEmergencyHint.Text = "💡 Klik di sini atau tekan ESC untuk mematikan proteksi";
-                    TxtEmergencyHint.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    BtnEndSession.ToolTip = "Stop protection and restore normal sleep settings (ESC)";
                 }
                 else
                 {
-                    DotStatus.Fill = (SolidColorBrush)FindResource("BrushTextDim");
-                    TxtTargetProcess.Text = "Hardware Guard";
-                    TxtTargetDesc.Text = " • Standby";
                     TxtAutoPilotBadge.Text = "STANDBY";
                     TxtAutoPilotBadge.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
-                    TxtHeaderSub.Text = "Clamshell Guard • Standby";
-                    BtnEndSession.Content = "Tutup [ESC]";
+                    TxtTargetStatus.Text = "System Standby";
+
+                    BtnEndSession.Content = "Close (ESC)";
                     BtnEndSession.Style = (Style)FindResource("BentoDangerBtn");
-                    BtnEndSession.ToolTip = "Tutup jendela atau batalkan";
-                    TxtEmergencyHint.Text = "Mode Standby • Klik preset durasi untuk mulai";
-                    TxtEmergencyHint.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
+                    BtnEndSession.ToolTip = "Close window to system tray (ESC)";
                 }
             }
             finally
@@ -183,87 +174,68 @@ public partial class FlyoutWindow : Window
 
             // 3. Thermal State
             var temp = _thermal.CurrentCpuTempCelsius;
-            if (temp > 0)
-            {
-                TxtTempDigits.Text = $"{temp:F0}°C";
-            }
-            TxtPillThrottle.Text = $"CAP {_thermal.CurrentMaxProcessorState}%";
+            TxtTempDigits.Text = temp > 0 ? $"{temp:F0}°C" : "--°C";
 
             if (_thermal.IsEmergencyThrottled)
             {
-                TxtTempStatus.Text = "Thermal Capped (80°C+)";
+                TxtTempStatus.Text = "Thermal Capped";
                 TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
             }
             else
             {
-                TxtTempStatus.Text = _thermal.CurrentCpuLoadPercent > 0 
-                    ? $"{_thermal.CurrentCpuLoadPercent}% Load • 92% Cap" 
-                    : "Normal (92% Cap)";
+                TxtTempStatus.Text = _thermal.CurrentCpuLoadPercent > 0
+                    ? $"{_thermal.CurrentCpuLoadPercent}% Load • 92% Cap"
+                    : "Normal • 92% Cap";
                 TxtTempStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
             }
 
-            // 4. Wi-Fi
-            TxtWifiSsid.Text = string.IsNullOrEmpty(_wifi.CurrentConnectedSsid) ? "Not Connected" : _wifi.CurrentConnectedSsid;
-            if (ChkAutoWifi.IsChecked == true)
+            // 4. Wi-Fi Watchdog State
+            if (ChkAutoWifi.IsChecked != true)
             {
-                TxtWifiPing.Text = $"{_wifi.PingLatencyMs}ms • Watchdog Active";
-                TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextMuted");
+                TxtWifiStatus.Text = "Disabled";
+                TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
+            }
+            else if (string.IsNullOrEmpty(_wifi.CurrentConnectedSsid))
+            {
+                TxtWifiStatus.Text = "Disconnected";
+                TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
             }
             else
             {
-                TxtWifiPing.Text = "Watchdog Disabled";
-                TxtWifiPing.Foreground = (SolidColorBrush)FindResource("BrushTextDim");
+                var ssid = _wifi.CurrentConnectedSsid;
+                var displaySsid = ssid.Length > 12 ? ssid[..10] + "…" : ssid;
+                TxtWifiStatus.Text = $"{_wifi.PingLatencyMs}ms ({displaySsid})";
+                TxtWifiStatus.Foreground = (SolidColorBrush)FindResource("BrushTextSilver");
             }
 
-            // 5. Freezer
-            if (_freezer.SuspendedProcessNames.Count > 0)
-            {
-                TxtFrozenApps.Text = string.Join(", ", _freezer.SuspendedProcessNames);
-            }
-            else
-            {
-                TxtFrozenApps.Text = "none";
-            }
-
-            // 6. Battery (via SystemInformation.PowerStatus)
+            // 5. Battery & Power Status
             try
             {
                 var power = System.Windows.Forms.SystemInformation.PowerStatus;
                 var pct = (int)(power.BatteryLifePercent * 100);
                 var isAc = power.PowerLineStatus == System.Windows.Forms.PowerLineStatus.Online;
 
-                TxtBatPct.Text = $"{pct}%";
-                ProgressBattery.Value = pct;
-
                 if (isAc)
                 {
-                    TxtBatStatus.Text = "⚡ AC Connected";
-                    TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
-                    ProgressBattery.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
+                    TxtBatStatus.Text = $"AC Power ({pct}%)";
                 }
                 else
                 {
-                    TxtBatStatus.Text = "🔋 On Battery";
-                    TxtBatStatus.Foreground = (SolidColorBrush)FindResource("BrushTextWhite");
-                    ProgressBattery.Foreground = pct <= 20 
-                        ? (SolidColorBrush)FindResource("BrushTextMuted") 
-                        : (SolidColorBrush)FindResource("BrushTextWhite");
-                }
-
-                if (power.BatteryLifeRemaining > 0 && !isAc)
-                {
-                    var hrs = power.BatteryLifeRemaining / 3600;
-                    var mins = (power.BatteryLifeRemaining % 3600) / 60;
-                    TxtBatRuntime.Text = $"~{hrs}h {mins}m left";
-                }
-                else
-                {
-                    TxtBatRuntime.Text = isAc ? "Full Capacity" : "~4h left";
+                    if (power.BatteryLifeRemaining > 0)
+                    {
+                        var hrs = power.BatteryLifeRemaining / 3600;
+                        var mins = (power.BatteryLifeRemaining % 3600) / 60;
+                        TxtBatStatus.Text = $"Battery {pct}% (~{hrs}h {mins}m)";
+                    }
+                    else
+                    {
+                        TxtBatStatus.Text = $"Battery ({pct}%)";
+                    }
                 }
             }
             catch
             {
-                // Fallback
+                TxtBatStatus.Text = "AC Power (100%)";
             }
         });
     }
@@ -271,11 +243,6 @@ public partial class FlyoutWindow : Window
     private void Coordinator_StateChanged(object? sender, SessionStateChangedEventArgs e) => RefreshUi();
     private void Thermal_TemperatureUpdated(object? sender, float e) => RefreshUi();
     private void Wifi_StatusChanged(object? sender, WiFiStatusChangedEventArgs e) => RefreshUi();
-
-    private void BtnMinimizeFlyout_Click(object sender, RoutedEventArgs e)
-    {
-        Hide();
-    }
 
     private void BtnCloseFlyout_Click(object sender, RoutedEventArgs e)
     {
@@ -290,8 +257,6 @@ public partial class FlyoutWindow : Window
             DragMove();
         }
     }
-
-    private void Header_MouseDown(object sender, MouseButtonEventArgs e) => Window_MouseDown(sender, e);
 
     private async void BtnAdd30_Click(object sender, RoutedEventArgs e)
     {
@@ -308,8 +273,15 @@ public partial class FlyoutWindow : Window
 
     private async void BtnEndSession_Click(object sender, RoutedEventArgs e)
     {
-        await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
-        RefreshUi();
+        if (_coordinator.CurrentStatus == SessionStatus.Active)
+        {
+            await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
+            RefreshUi();
+        }
+        else
+        {
+            Hide();
+        }
     }
 
     private async void Preset_Click(object sender, RoutedEventArgs e)
@@ -330,7 +302,7 @@ public partial class FlyoutWindow : Window
 
     private async void FlyoutWindow_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        if (e.Key == System.Windows.Input.Key.Escape)
+        if (e.Key == Key.Escape)
         {
             if (_coordinator.CurrentStatus == SessionStatus.Active)
             {
@@ -342,15 +314,6 @@ public partial class FlyoutWindow : Window
                 Hide();
             }
             e.Handled = true;
-        }
-    }
-
-    private async void PillEmergencyHint_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if (_coordinator.CurrentStatus == SessionStatus.Active)
-        {
-            await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);
-            RefreshUi();
         }
     }
 }
