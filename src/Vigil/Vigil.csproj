@@ -23,9 +23,8 @@
 
   <ItemGroup>
     <Resource Include="assets\icon.png" />
-    <None Include="assets\tray-icon-32.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="assets\tray-icon-32.png" />
+    <Resource Include="icon.ico" />
   </ItemGroup>
 
 </Project>

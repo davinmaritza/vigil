@@ -15,6 +15,7 @@ namespace Vigil;
 public partial class App : Application
 {
     private static Mutex? _singleInstanceMutex;
+    private static EventWaitHandle? _showFlyoutEvent;
     private NotifyIcon? _trayIcon;
     private FlyoutWindow? _flyout;
 
@@ -82,20 +83,46 @@ public partial class App : Application
             return;
         }
 
-        // Single Instance Guard for UI Mode
+        // Single Instance Guard with Auto-Summon
         const string mutexName = "Vigil_SingleInstance_Mutex";
+        const string eventName = "Vigil_ShowFlyout_Event";
+
         _singleInstanceMutex = new Mutex(true, mutexName, out var isNewInstance);
         if (!isNewInstance)
         {
-            System.Windows.MessageBox.Show(
-                "Vigil is already running in your System Tray notification area.",
-                "Vigil",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+            try
+            {
+                using var showEvent = EventWaitHandle.OpenExisting(eventName);
+                showEvent.Set();
+            }
+            catch { }
+
             Shutdown();
             return;
         }
+
+        try
+        {
+            _showFlyoutEvent = new EventWaitHandle(false, EventResetMode.AutoReset, eventName);
+            Task.Run(() =>
+            {
+                while (_showFlyoutEvent != null)
+                {
+                    try
+                    {
+                        if (_showFlyoutEvent.WaitOne())
+                        {
+                            Dispatcher.BeginInvoke(() =>
+                            {
+                                ShowFlyout();
+                            });
+                        }
+                    }
+                    catch { break; }
+                }
+            });
+        }
+        catch { }
 
         // Check for previous crash journal
         await CheckCrashRecoveryAsync();
@@ -193,22 +220,43 @@ public partial class App : Application
             }
         };
 
-        var contextMenu = new ContextMenuStrip();
-        
+        System.Drawing.Font menuFont;
+        try
+        {
+            menuFont = new System.Drawing.Font("Segoe UI Variable Text", 9.5f, System.Drawing.FontStyle.Regular);
+        }
+        catch
+        {
+            menuFont = new System.Drawing.Font("Segoe UI", 9.5f, System.Drawing.FontStyle.Regular);
+        }
+
+        var contextMenu = new ContextMenuStrip
+        {
+            Renderer = new DarkContextMenuRenderer(),
+            BackColor = System.Drawing.Color.FromArgb(0x14, 0x15, 0x18),
+            ForeColor = System.Drawing.Color.FromArgb(0xED, 0xED, 0xF0),
+            Font = menuFont,
+            ShowImageMargin = true,
+            ShowCheckMargin = false,
+            DropShadowEnabled = true,
+            Padding = new Padding(2, 6, 2, 6)
+        };
+
         // 1. Prominent Emergency Cancel Option at top
-        var stopItem = new ToolStripMenuItem("🛑 Stop Protection [Restore Normal]", null, async (_, _) =>
+        var stopItem = new ToolStripMenuItem("Stop Protection", null, async (_, _) =>
         {
             await _coordinator!.EndSessionAsync(SessionEndReason.UserRequested);
             _flyout?.RefreshUi();
         })
         {
-            Font = new System.Drawing.Font(contextMenu.Font, System.Drawing.FontStyle.Bold)
+            Font = new System.Drawing.Font(menuFont, System.Drawing.FontStyle.Bold),
+            Tag = "danger"
         };
         contextMenu.Items.Add(stopItem);
         contextMenu.Items.Add(new ToolStripSeparator());
 
-        contextMenu.Items.Add("Open Vigil Menu", null, (_, _) => ShowFlyout());
-        contextMenu.Items.Add("⚙ Settings...", null, (_, _) => ShowSettings());
+        contextMenu.Items.Add("Open Dashboard", null, (_, _) => ShowFlyout());
+        contextMenu.Items.Add("Settings...", null, (_, _) => ShowSettings());
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add("Start 1-Hour Session", null, async (_, _) =>
         {
@@ -364,6 +412,29 @@ public partial class App : Application
             return;
         }
 
+        if (cmd == "--screenshot-tray-menu")
+        {
+            try
+            {
+                var targetPath = args.Length > 1 ? args[1] : "vigil_tray_menu.png";
+                SetupSystemTray();
+                if (_trayIcon?.ContextMenuStrip != null)
+                {
+                    var menu = _trayIcon.ContextMenuStrip;
+                    menu.Show(new System.Drawing.Point(-10000, -10000));
+                    var bmp = new Bitmap(menu.Width, menu.Height);
+                    menu.DrawToBitmap(bmp, new Rectangle(0, 0, menu.Width, menu.Height));
+                    bmp.Save(targetPath, System.Drawing.Imaging.ImageFormat.Png);
+                    menu.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error capturing tray menu screenshot: {ex.Message}");
+            }
+            return;
+        }
+
         if (cmd == "--screenshot-settings")
         {
             try
@@ -490,6 +561,20 @@ public partial class App : Application
     {
         try
         {
+            var uri = new Uri("pack://application:,,,/assets/tray-icon-32.png");
+            var streamInfo = Application.GetResourceStream(uri);
+            if (streamInfo != null)
+            {
+                using var stream = streamInfo.Stream;
+                using var pngBmp = (Bitmap)Image.FromStream(stream);
+                var hIcon = pngBmp.GetHicon();
+                return (Icon)Icon.FromHandle(hIcon).Clone();
+            }
+        }
+        catch { }
+
+        try
+        {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             var whitePngPath = Path.Combine(baseDir, "tray-icon-32.png");
             if (File.Exists(whitePngPath))
@@ -499,10 +584,18 @@ public partial class App : Application
                 return (Icon)Icon.FromHandle(hIcon).Clone();
             }
         }
-        catch
+        catch { }
+
+        try
         {
-            // Fallback to procedural icon
+            var processPath = Environment.ProcessPath;
+            if (!string.IsNullOrEmpty(processPath) && File.Exists(processPath))
+            {
+                var icon = Icon.ExtractAssociatedIcon(processPath);
+                if (icon != null) return (Icon)icon.Clone();
+            }
         }
+        catch { }
 
         using var bmp = new Bitmap(32, 32);
         using var g = Graphics.FromImage(bmp);
@@ -532,6 +625,7 @@ public partial class App : Application
 
         _trayIcon?.Dispose();
         _singleInstanceMutex?.Dispose();
+        _showFlyoutEvent?.Dispose();
         Shutdown();
     }
 }
