@@ -14,11 +14,31 @@ using Orientation = System.Windows.Controls.Orientation;
 using Brushes = System.Windows.Media.Brushes;
 using Cursors = System.Windows.Input.Cursors;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using ContextMenu = System.Windows.Controls.ContextMenu;
+using MenuItem = System.Windows.Controls.MenuItem;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Vigil.Views;
 
 public partial class SettingsWindow : Window
 {
+    private record QuickPreset(string Name, string[] ExeNames);
+
+    private static readonly QuickPreset[] Presets = new[]
+    {
+        new QuickPreset("GTA V", new[] { "gta5.exe", "gta5_enhanced.exe" }),
+        new QuickPreset("Unreal", new[] { "unrealeditor.exe" }),
+        new QuickPreset("Unity", new[] { "unity.exe" }),
+        new QuickPreset("Steam", new[] { "steam.exe" }),
+        new QuickPreset("Epic", new[] { "epicgameslauncher.exe" }),
+        new QuickPreset("Blender", new[] { "blender.exe" }),
+        new QuickPreset("DaVinci", new[] { "resolve.exe" }),
+        new QuickPreset("HandBrake", new[] { "handbrake.exe" }),
+        new QuickPreset("OBS", new[] { "obs64.exe" }),
+        new QuickPreset("Premiere", new[] { "adobe premiere pro.exe" }),
+        new QuickPreset("ComfyUI", new[] { "webui.exe" })
+    };
+
     private readonly VigilConfig _config;
     private readonly List<string> _workingProcesses = new();
 
@@ -62,6 +82,7 @@ public partial class SettingsWindow : Window
         _workingProcesses.Clear();
         _workingProcesses.AddRange(_config.AutoPilot.WatchProcesses);
         RenderProcessChips();
+        RenderQuickPresets();
     }
 
     private void RenderProcessChips()
@@ -112,6 +133,7 @@ public partial class SettingsWindow : Window
             {
                 _workingProcesses.Remove(pName);
                 RenderProcessChips();
+                RenderQuickPresets();
             };
 
             removeBtn.MouseEnter += (_, _) => removeBtn.Foreground = new SolidColorBrush(Color.FromRgb(0xE5, 0x53, 0x53));
@@ -125,9 +147,220 @@ public partial class SettingsWindow : Window
         }
     }
 
+    private void RenderQuickPresets()
+    {
+        PnlQuickPresets.Children.Clear();
+        var monoFont = TryFindResource("FontMono") as FontFamily ?? new FontFamily("Consolas, monospace");
+
+        foreach (var preset in Presets)
+        {
+            var p = preset; // Closure copy
+            var isAdded = p.ExeNames.All(exe => _workingProcesses.Any(wp => wp.Equals(exe, StringComparison.OrdinalIgnoreCase)));
+
+            var btn = new Button
+            {
+                Content = isAdded ? $"✓ {p.Name}" : $"+ {p.Name}",
+                Margin = new Thickness(0, 0, 5, 5),
+                Padding = new Thickness(7, 3, 7, 3),
+                FontSize = 10,
+                FontWeight = isAdded ? FontWeights.Normal : FontWeights.SemiBold,
+                FontFamily = monoFont,
+                Background = isAdded 
+                    ? new SolidColorBrush(Color.FromArgb(0x10, 0xFF, 0xFF, 0xFF)) 
+                    : new SolidColorBrush(Color.FromArgb(0x1C, 0x3B, 0x82, 0xF6)),
+                Foreground = isAdded 
+                    ? new SolidColorBrush(Color.FromRgb(0x60, 0x66, 0x75)) 
+                    : new SolidColorBrush(Color.FromRgb(0x93, 0xC5, 0xFD)),
+                BorderBrush = isAdded 
+                    ? new SolidColorBrush(Color.FromArgb(0x15, 0xFF, 0xFF, 0xFF)) 
+                    : new SolidColorBrush(Color.FromArgb(0x38, 0x3B, 0x82, 0xF6)),
+                BorderThickness = new Thickness(1),
+                Cursor = Cursors.Hand,
+                ToolTip = isAdded 
+                    ? $"{string.Join(", ", p.ExeNames)} (Click to remove)" 
+                    : $"Add {string.Join(", ", p.ExeNames)}"
+            };
+
+            btn.Click += (_, _) =>
+            {
+                if (isAdded)
+                {
+                    foreach (var exe in p.ExeNames)
+                    {
+                        _workingProcesses.RemoveAll(wp => wp.Equals(exe, StringComparison.OrdinalIgnoreCase));
+                    }
+                }
+                else
+                {
+                    foreach (var exe in p.ExeNames)
+                    {
+                        AddProcess(exe);
+                    }
+                }
+                RenderProcessChips();
+                RenderQuickPresets();
+            };
+
+            PnlQuickPresets.Children.Add(btn);
+        }
+    }
+
+    private record RunningApp(string ExeName, string Title);
+
+    private List<RunningApp> GetRunningApplications()
+    {
+        var list = new List<RunningApp>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        var ignoreList = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "svchost", "conhost", "csrss", "winlogon", "dwm", "sihost", "taskhostw",
+            "fontdrvhost", "explorer", "vigil", "searchhost", "textinputhost",
+            "applicationframehost", "shellexperiencehost", "systemsettings",
+            "runtimebroker", "backgroundtaskhost", "ctfmon", "securityhealthservice",
+            "securityhealthsystray", "wmiinetsrv", "wmiprvse", "cmd", "powershell",
+            "tasklist", "idle", "system"
+        };
+
+        try
+        {
+            int currentSessionId;
+            try { currentSessionId = Process.GetCurrentProcess().SessionId; }
+            catch { currentSessionId = -1; }
+
+            var processes = Process.GetProcesses();
+
+            // 1. Session processes with active MainWindowTitle
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (currentSessionId != -1 && p.SessionId != currentSessionId) continue;
+                    if (ignoreList.Contains(p.ProcessName)) continue;
+
+                    var title = p.MainWindowTitle;
+                    if (string.IsNullOrWhiteSpace(title)) continue;
+
+                    var exeName = p.ProcessName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                        ? p.ProcessName.ToLowerInvariant()
+                        : (p.ProcessName + ".exe").ToLowerInvariant();
+
+                    if (seen.Add(exeName))
+                    {
+                        list.Add(new RunningApp(exeName, title.Trim()));
+                    }
+                }
+                catch { }
+            }
+
+            // 2. Session processes without window title (e.g. background engines or child processes)
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (currentSessionId != -1 && p.SessionId != currentSessionId) continue;
+                    if (ignoreList.Contains(p.ProcessName)) continue;
+
+                    var exeName = p.ProcessName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+                        ? p.ProcessName.ToLowerInvariant()
+                        : (p.ProcessName + ".exe").ToLowerInvariant();
+
+                    if (seen.Add(exeName))
+                    {
+                        list.Add(new RunningApp(exeName, string.Empty));
+                    }
+                }
+                catch { }
+            }
+        }
+        catch { }
+
+        return list;
+    }
+
+    private void BtnRunningApps_Click(object sender, RoutedEventArgs e)
+    {
+        var menu = new ContextMenu
+        {
+            Style = TryFindResource("DarkContextMenuStyle") as Style,
+            PlacementTarget = BtnRunningApps,
+            Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom
+        };
+
+        var runningApps = GetRunningApplications();
+        if (runningApps.Count == 0)
+        {
+            var emptyItem = new MenuItem
+            {
+                Header = "(No active windowed apps detected)",
+                IsEnabled = false,
+                Style = TryFindResource("DarkMenuItemStyle") as Style
+            };
+            menu.Items.Add(emptyItem);
+        }
+        else
+        {
+            foreach (var app in runningApps)
+            {
+                var isAdded = _workingProcesses.Any(p => p.Equals(app.ExeName, StringComparison.OrdinalIgnoreCase));
+                var displayTitle = string.IsNullOrWhiteSpace(app.Title) ? app.ExeName : app.Title;
+                if (displayTitle.Length > 28)
+                {
+                    displayTitle = displayTitle.Substring(0, 26) + "...";
+                }
+
+                var item = new MenuItem
+                {
+                    Header = isAdded ? $"✓  {displayTitle}" : $"+  {displayTitle}",
+                    InputGestureText = app.ExeName,
+                    IsEnabled = !isAdded,
+                    Style = TryFindResource("DarkMenuItemStyle") as Style
+                };
+
+                var exe = app.ExeName;
+                item.Click += (_, _) =>
+                {
+                    AddProcess(exe);
+                };
+
+                menu.Items.Add(item);
+            }
+        }
+
+        menu.IsOpen = true;
+    }
+
+    private void BtnBrowseExe_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new OpenFileDialog
+        {
+            Title = "Select Application Executable",
+            Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
+            CheckFileExists = true,
+            Multiselect = true
+        };
+
+        if (dlg.ShowDialog(this) == true)
+        {
+            foreach (var file in dlg.FileNames)
+            {
+                var fileName = Path.GetFileName(file);
+                AddProcess(fileName);
+            }
+        }
+    }
+
     private void AddProcessFromInput()
     {
         var input = TxtNewProcess.Text.Trim();
+        if (string.IsNullOrWhiteSpace(input)) return;
+
+        AddProcess(input);
+        TxtNewProcess.Text = string.Empty;
+    }
+
+    private void AddProcess(string input)
+    {
         if (string.IsNullOrWhiteSpace(input)) return;
 
         // Clean up input
@@ -136,19 +369,29 @@ public partial class SettingsWindow : Window
         {
             input += ".exe";
         }
+        input = input.ToLowerInvariant();
 
         if (!_workingProcesses.Any(p => p.Equals(input, StringComparison.OrdinalIgnoreCase)))
         {
-            _workingProcesses.Add(input.ToLowerInvariant());
+            _workingProcesses.Add(input);
             RenderProcessChips();
+            RenderQuickPresets();
         }
-
-        TxtNewProcess.Text = string.Empty;
     }
 
     private void BtnAddProcess_Click(object sender, RoutedEventArgs e)
     {
         AddProcessFromInput();
+    }
+
+    private void TxtNewProcess_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (TxtPlaceholder != null)
+        {
+            TxtPlaceholder.Visibility = string.IsNullOrEmpty(TxtNewProcess.Text)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
     }
 
     private void TxtNewProcess_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -175,6 +418,7 @@ public partial class SettingsWindow : Window
             "jan.exe"
         });
         RenderProcessChips();
+        RenderQuickPresets();
     }
 
     private void SliderDefaultDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

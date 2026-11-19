@@ -53,4 +53,19 @@ public class ProcessWatcherCustomTests
             if (File.Exists(tempFile)) File.Delete(tempFile);
         }
     }
+
+    [Fact]
+    public void ProcessWatcher_SupportsMultipleExecutableVariantsForSameGame()
+    {
+        var config = new VigilConfig();
+        config.AutoPilot.WatchProcesses.Clear();
+        config.AutoPilot.WatchProcesses.Add("gta5.exe");
+        config.AutoPilot.WatchProcesses.Add("gta5_enhanced.exe");
+
+        var watcher = new ProcessWatcher(config);
+
+        Assert.Equal(2, watcher.MonitoredProcesses.Count);
+        Assert.Contains("gta5.exe", watcher.MonitoredProcesses);
+        Assert.Contains("gta5_enhanced.exe", watcher.MonitoredProcesses);
+    }
 }

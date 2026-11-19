@@ -38,6 +38,59 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Sleek Dark Obsidian ContextMenu for Running Apps -->
+        <Style x:Key="DarkContextMenuStyle" TargetType="{x:Type ContextMenu}">
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+            <Setter Property="HasDropShadow" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderLight}" BorderThickness="1" CornerRadius="8" Padding="4">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="16" Direction="270" ShadowDepth="4" Opacity="0.6" Color="#000000" />
+                            </Border.Effect>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="250">
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DarkMenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="ItemBorder" Background="Transparent" CornerRadius="5" Padding="8,4" Margin="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="TxtHeader" Text="{TemplateBinding Header}" FontSize="11" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="1" Text="{TemplateBinding InputGestureText}" FontSize="10" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="14,0,4,0" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#252932" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="TxtHeader" Property="Foreground" Value="{StaticResource BrushTextDim}" />
+                                <Setter Property="Cursor" Value="Arrow" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- Window Outer DropShadow Canvas -->
@@ -248,38 +301,70 @@
                             <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
 
                             <StackPanel Margin="0,4">
-                                <Grid Margin="0,0,0,4">
+                                <Grid Margin="0,0,0,6">
                                     <TextBlock Text="Monitored Processes (Auto-Arm)" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextSilver}" VerticalAlignment="Center" />
                                     <Button Content="Reset Defaults" Click="BtnResetProcesses_Click" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Foreground="{StaticResource BrushTextMuted}" FontSize="9.5" Cursor="Hand" />
                                 </Grid>
 
                                 <!-- Process Chips WrapPanel -->
-                                <WrapPanel x:Name="PnlProcessChips" Margin="0,2,0,6" />
+                                <WrapPanel x:Name="PnlProcessChips" Margin="0,0,0,8" />
 
-                                <!-- Add Process Input Row -->
-                                <Grid Margin="0,2,0,4">
+                                <!-- Quick Presets Row -->
+                                <TextBlock Text="QUICK PRESETS (1-CLICK ADD)" FontSize="9" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,4" />
+                                <WrapPanel x:Name="PnlQuickPresets" Margin="0,0,0,8" />
+
+                                <!-- One-Click Tools (Running Apps & Browse Exe) -->
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="6" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" x:Name="BtnRunningApps" Click="BtnRunningApps_Click" Style="{StaticResource BentoPresetBtn}" Height="28" Padding="4,0" ToolTip="Select from currently active applications">
+                                        <TextBlock Text="⚡ Running Apps ▾" FontSize="10.5" FontWeight="SemiBold" />
+                                    </Button>
+
+                                    <Button Grid.Column="2" x:Name="BtnBrowseExe" Click="BtnBrowseExe_Click" Style="{StaticResource BentoPresetBtn}" Height="28" Padding="4,0" ToolTip="Browse .exe file from your PC">
+                                        <TextBlock Text="📁 Browse .exe..." FontSize="10.5" FontWeight="SemiBold" />
+                                    </Button>
+                                </Grid>
+
+                                <!-- Manual Text Input Row (Fallback) -->
+                                <Grid Margin="0,0,0,4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
 
                                     <Border Background="#101114" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="5" Margin="0,0,6,0">
-                                        <TextBox x:Name="TxtNewProcess" 
-                                                 Background="Transparent" 
-                                                 BorderThickness="0" 
-                                                 Foreground="{StaticResource BrushTextWhite}" 
-                                                 CaretBrush="{StaticResource BrushTextWhite}" 
-                                                 FontFamily="{StaticResource FontMono}" 
-                                                 FontSize="11" 
-                                                 Padding="8,5" 
-                                                 VerticalContentAlignment="Center"
-                                                 KeyDown="TxtNewProcess_KeyDown" />
+                                        <Grid>
+                                            <TextBlock x:Name="TxtPlaceholder" 
+                                                       Text="Type custom .exe (e.g. game.exe)..." 
+                                                       Foreground="{StaticResource BrushTextDim}" 
+                                                       FontSize="10.5" 
+                                                       FontFamily="{StaticResource FontMono}" 
+                                                       Margin="8,5" 
+                                                       VerticalAlignment="Center" 
+                                                       IsHitTestVisible="False" />
+                                            <TextBox x:Name="TxtNewProcess" 
+                                                     Background="Transparent" 
+                                                     BorderThickness="0" 
+                                                     Foreground="{StaticResource BrushTextWhite}" 
+                                                     CaretBrush="{StaticResource BrushTextWhite}" 
+                                                     FontFamily="{StaticResource FontMono}" 
+                                                     FontSize="11" 
+                                                     Padding="8,5" 
+                                                     VerticalContentAlignment="Center"
+                                                     TextChanged="TxtNewProcess_TextChanged"
+                                                     KeyDown="TxtNewProcess_KeyDown" />
+                                        </Grid>
                                     </Border>
 
                                     <Button Grid.Column="1" x:Name="BtnAddProcess" Content="+ Add" Click="BtnAddProcess_Click" Style="{StaticResource BentoPresetBtn}" Padding="10,0" Height="28" />
                                 </Grid>
 
-                                <TextBlock Text="Type executable name (e.g. GTA5.exe, unreal.exe) and click + Add or press Enter." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
+                                <TextBlock Text="Quick presets, running apps, file browse, or type .exe directly." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
