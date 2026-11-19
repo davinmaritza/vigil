@@ -35,11 +35,11 @@ public partial class App : Application
 
         AppDomain.CurrentDomain.UnhandledException += (s, ev) =>
         {
-            try { File.WriteAllText("crash.log", ev.ExceptionObject.ToString()); } catch { }
+            try { File.AppendAllText("crash.log", $"Unhandled: {ev.ExceptionObject}\n"); } catch { }
         };
         DispatcherUnhandledException += (s, ev) =>
         {
-            try { File.WriteAllText("crash.log", ev.Exception.ToString()); } catch { }
+            try { File.AppendAllText("crash.log", $"DispatcherUnhandled: {ev.Exception}\n"); } catch { }
         };
 
         // Load configuration
