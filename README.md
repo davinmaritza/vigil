@@ -76,7 +76,21 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 ## Quick start
 
-### Prebuilt release (recommended)
+### Automatic Installation (Recommended)
+
+Run the installation script in PowerShell to install Vigil into `%LOCALAPPDATA%\Programs\Vigil`, add Desktop and Start Menu shortcuts with official icons, configure auto-start on boot, and register `vigil` in your User `PATH`:
+
+```powershell
+# From the repository root:
+.\scripts\install.ps1
+```
+
+To uninstall at any time:
+```powershell
+.\scripts\uninstall.ps1
+```
+
+### Prebuilt release
 
 1. Download `Vigil.exe` or `vigil-v1.0.2-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
 2. Run `Vigil.exe`. The popover appears near your system tray.
