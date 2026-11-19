@@ -130,7 +130,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="ActionBorder" 
                                 Background="{TemplateBinding Background}" 
-                                CornerRadius="6">
+                                CornerRadius="7">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -164,7 +164,7 @@
                                 Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="6">
+                                CornerRadius="7">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -186,7 +186,7 @@
         <Style x:Key="BentoStopActiveBtn" TargetType="Button">
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="FontFamily" Value="{StaticResource FontPlusJakarta}" />
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="11.5" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="#FFFFFF" />
             <Setter Property="Background" Value="#2E181A" />
@@ -200,7 +200,7 @@
                                 Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
-                                CornerRadius="6">
+                                CornerRadius="7">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>

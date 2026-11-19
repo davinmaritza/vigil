@@ -29,8 +29,8 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/vigil-ui-active.png" alt="Vigil Active Guard (268 x 208)" width="260">&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="docs/images/vigil-ui-standby.png" alt="Vigil Standby Mode (268 x 208)" width="260">
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Active Guard (320 x 248)" width="300">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/vigil-ui-standby.png" alt="Vigil Standby Mode (320 x 248)" width="300">
 </p>
 
 > **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
@@ -63,7 +63,7 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 ## Features
 
-- **Compact Menu Bar Interface**: Ultra-sleek 268 × 208 px popover inspired by Insomnia on macOS, Dieter Rams, and Teenage Engineering. Floats right above your taskbar system tray with an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette. 100% clean English typography with zero AI-slop.
+- **Compact Menu Bar Interface**: Ultra-sleek 320 × 248 px popover inspired by Insomnia on macOS, Dieter Rams, and Teenage Engineering. Floats right above your taskbar system tray with an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette. 100% clean English typography with zero AI-slop.
 - **Master Hardware Switch**: Direct `ON` / `OFF` toggle in the top-right header for instant manual protection without configuring a timer.
 - **Quick Preset Chips**: Jump into `30m`, `1h`, `2h`, `4h`, or indefinite (`∞`) protection with a single click.
 - **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, the display backlight sleeps naturally and wakes instantly on lid open.
