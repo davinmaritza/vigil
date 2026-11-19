@@ -86,6 +86,12 @@ public class ThermalSettings
 
 public class BatterySettings
 {
+    [JsonPropertyName("batteryGuardEnabled")]
+    public bool BatteryGuardEnabled { get; set; } = true;
+
+    [JsonPropertyName("lowBatteryThresholdPercent")]
+    public int LowBatteryThresholdPercent { get; set; } = 20;
+
     [JsonPropertyName("ecoQoSFloorPercent")]
     public int EcoQoSFloorPercent { get; set; } = 40;
 

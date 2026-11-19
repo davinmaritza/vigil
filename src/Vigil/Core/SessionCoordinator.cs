@@ -13,18 +13,21 @@ public class SessionCoordinator : ISessionCoordinator
     private readonly IProcessFreezer _processFreezer;
     private readonly IRecoveryJournal _recoveryJournal;
     private readonly VigilConfig _config;
+    private readonly IBatteryMonitor _batteryMonitor;
 
     private readonly Timer _countdownTimer;
     private SessionStatus _status = SessionStatus.Idle;
     private TimeSpan _remainingTime = TimeSpan.Zero;
     private bool _isInfinite;
     private string? _activeTargetProcess;
+    private SessionEndReason? _lastEndReason;
     private bool _disposed;
 
     public SessionStatus CurrentStatus => _status;
     public TimeSpan RemainingTime => _remainingTime;
     public bool IsInfiniteSession => _isInfinite;
     public string? ActiveTargetProcess => _activeTargetProcess;
+    public SessionEndReason? LastEndReason => _lastEndReason;
 
     public event EventHandler<SessionStateChangedEventArgs>? StateChanged;
 
@@ -34,7 +37,8 @@ public class SessionCoordinator : ISessionCoordinator
         IWiFiWatchdog wifiWatchdog,
         IProcessFreezer processFreezer,
         IRecoveryJournal recoveryJournal,
-        VigilConfig config)
+        VigilConfig config,
+        IBatteryMonitor? batteryMonitor = null)
     {
         _powerController = powerController;
         _thermalThrottler = thermalThrottler;
@@ -42,6 +46,7 @@ public class SessionCoordinator : ISessionCoordinator
         _processFreezer = processFreezer;
         _recoveryJournal = recoveryJournal;
         _config = config;
+        _batteryMonitor = batteryMonitor ?? new BatteryMonitor();
 
         _countdownTimer = new Timer(1000);
         _countdownTimer.Elapsed += OnTimerTick;
@@ -56,6 +61,14 @@ public class SessionCoordinator : ISessionCoordinator
             {
                 await ExtendSessionAsync(duration.Value, ct);
             }
+            return;
+        }
+
+        // Safety check: Do not start if battery is already critical on battery power
+        if (_config.Battery.BatteryGuardEnabled && _batteryMonitor.IsBatteryCritical(_config.Battery.LowBatteryThresholdPercent))
+        {
+            _lastEndReason = SessionEndReason.BatteryCritical;
+            NotifyStateChanged(SessionEndReason.BatteryCritical);
             return;
         }
 
@@ -152,16 +165,26 @@ public class SessionCoordinator : ISessionCoordinator
         await _recoveryJournal.CancelBackstopWatchdogAsync(ct);
         await _recoveryJournal.ClearJournalAsync(ct);
 
+        _lastEndReason = reason;
         _status = SessionStatus.Idle;
         _remainingTime = TimeSpan.Zero;
         _isInfinite = false;
         _activeTargetProcess = null;
 
-        NotifyStateChanged();
+        NotifyStateChanged(reason);
     }
 
     private void OnTimerTick(object? sender, ElapsedEventArgs e)
     {
+        // 1. Periodic Battery Floor Guard Check
+        if (_config.Battery.BatteryGuardEnabled && _batteryMonitor.IsBatteryCritical(_config.Battery.LowBatteryThresholdPercent))
+        {
+            _countdownTimer.Stop();
+            _ = EndSessionAsync(SessionEndReason.BatteryCritical);
+            return;
+        }
+
+        // 2. Countdown handling
         if (_isInfinite) return;
 
         if (_remainingTime > TimeSpan.FromSeconds(1))
@@ -177,9 +200,9 @@ public class SessionCoordinator : ISessionCoordinator
         }
     }
 
-    private void NotifyStateChanged()
+    private void NotifyStateChanged(SessionEndReason? reason = null)
     {
-        StateChanged?.Invoke(this, new SessionStateChangedEventArgs(_status, _remainingTime, _activeTargetProcess));
+        StateChanged?.Invoke(this, new SessionStateChangedEventArgs(_status, _remainingTime, _activeTargetProcess, reason ?? _lastEndReason));
     }
 
     public async ValueTask DisposeAsync()

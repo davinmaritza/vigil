@@ -125,6 +125,23 @@ public partial class App : Application
         // Show Flyout Window on launch
         ShowFlyout();
 
+        // Listen for Battery Critical or Session End Notifications
+        _coordinator.StateChanged += (s, ev) =>
+        {
+            if (ev.EndReason == SessionEndReason.BatteryCritical)
+            {
+                Dispatcher.BeginInvoke(() =>
+                {
+                    _trayIcon?.ShowBalloonTip(
+                        4000,
+                        "Vigil - Battery Guard Protection",
+                        $"Guard stopped: Battery dropped below {_config.Battery.LowBatteryThresholdPercent}%. Normal Windows sleep restored.",
+                        ToolTipIcon.Warning
+                    );
+                });
+            }
+        };
+
         // Setup Auto-Pilot
         _processWatcher.TargetProcessStarted += async (_, procName) =>
         {
@@ -353,17 +370,22 @@ public partial class App : Application
             {
                 var targetPath = args.Length > 1 ? args[1] : "vigil_settings_preview.png";
                 var settingsWin = new SettingsWindow(_config);
-                var border = (FrameworkElement)settingsWin.Content;
-                settingsWin.Content = null;
 
                 var w = (int)settingsWin.Width;
                 var h = (int)settingsWin.Height;
-                border.Measure(new System.Windows.Size(w, h));
-                border.Arrange(new Rect(0, 0, w, h));
-                border.UpdateLayout();
+
+                settingsWin.Show();
+                settingsWin.UpdateLayout();
+
+                if (args.Length > 2 && args[2].ToLowerInvariant() == "bottom")
+                {
+                    var scroll = settingsWin.FindName("SettingsScroll") as System.Windows.Controls.ScrollViewer;
+                    scroll?.ScrollToBottom();
+                    settingsWin.UpdateLayout();
+                }
 
                 var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(w, h, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
-                rtb.Render(border);
+                rtb.Render(settingsWin);
 
                 var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
                 encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
@@ -372,6 +394,8 @@ public partial class App : Application
                 {
                     encoder.Save(fs);
                 }
+
+                settingsWin.Close();
             }
             catch (Exception ex)
             {

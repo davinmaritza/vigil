@@ -32,15 +32,15 @@ public class ProcessWatcher : IProcessWatcher
 
     private async Task WatcherLoopAsync(CancellationToken ct)
     {
-        var watchedSet = new HashSet<string>(
-            _config.AutoPilot.WatchProcesses.Select(p => p.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? p[..^4] : p),
-            StringComparer.OrdinalIgnoreCase
-        );
-
         while (!ct.IsCancellationRequested)
         {
             try
             {
+                var watchedSet = new HashSet<string>(
+                    _config.AutoPilot.WatchProcesses.Select(p => p.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? p[..^4] : p),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
                 var running = Process.GetProcesses();
                 string? detectedProcess = null;
 

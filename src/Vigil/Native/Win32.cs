@@ -99,4 +99,20 @@ public static class Win32
         public int DataLength;
         public byte Data;
     }
+
+    // Battery & System Power Status
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SystemPowerStatus
+    {
+        public byte AcLineStatus;        // 0 = Offline (Battery), 1 = Online (AC), 255 = Unknown
+        public byte BatteryFlag;         // 1 = High, 2 = Low, 4 = Critical, 8 = Charging, 128 = No battery, 255 = Unknown
+        public byte BatteryLifePercent;  // 0-100, 255 = Unknown
+        public byte SystemStatusFlag;
+        public int BatteryLifeTime;
+        public int BatteryFullLifeTime;
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetSystemPowerStatus(out SystemPowerStatus lpSystemPowerStatus);
 }

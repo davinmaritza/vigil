@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Vigil Settings"
         Width="420"
-        Height="710"
+        Height="740"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -83,8 +83,33 @@
             <Border Grid.Row="1" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,10,0,10" />
 
             <!-- 2: Settings Sections (Clean Grouped Cards) -->
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel Margin="0,0,4,0">
+            <ScrollViewer x:Name="SettingsScroll" Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer.Resources>
+                    <Style TargetType="{x:Type ScrollBar}">
+                        <Setter Property="Width" Value="5" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                    <Grid Background="Transparent">
+                                        <Track x:Name="PART_Track" IsDirectionReversed="true">
+                                            <Track.Thumb>
+                                                <Thumb>
+                                                    <Thumb.Template>
+                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                            <Border Background="#35FFFFFF" CornerRadius="2.5" />
+                                                        </ControlTemplate>
+                                                    </Thumb.Template>
+                                                </Thumb>
+                                            </Track.Thumb>
+                                        </Track>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ScrollViewer.Resources>
+                <StackPanel Margin="0,0,6,0">
 
                     <!-- Group 1: General & Clamshell -->
                     <TextBlock Text="GENERAL &amp; CLAMSHELL" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
@@ -133,7 +158,34 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Group 2: Thermal Guard & Performance -->
+                    <!-- Group 2: Battery & Power Safety -->
+                    <TextBlock Text="BATTERY &amp; POWER SAFETY" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
+                    <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,0,14">
+                        <StackPanel>
+                            <!-- Row: Battery Floor Guard Toggle -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Battery floor protection" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Auto-restores sleep if battery drops on DC power" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkBatteryGuard" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Low Battery Threshold Slider -->
+                            <StackPanel Margin="0,4">
+                                <Grid>
+                                    <TextBlock Text="Stop guard session below" FontSize="11" Foreground="{StaticResource BrushTextSilver}" VerticalAlignment="Center" />
+                                    <TextBlock x:Name="TxtLowBatteryLabel" Text="20%" FontSize="11" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <Slider x:Name="SliderLowBattery" Minimum="10" Maximum="40" Value="20" TickFrequency="5" IsSnapToTickEnabled="True" Margin="0,6,0,2" ValueChanged="SliderLowBattery_ValueChanged" />
+                                <TextBlock Text="Prevents battery drain to 0% and abrupt shutdown if charger is disconnected." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Group 3: Thermal Guard & Performance -->
                     <TextBlock Text="THERMAL &amp; VOLTAGE CEILING" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
                     <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,14">
                         <StackPanel>
@@ -157,7 +209,7 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Group 3: Network & Workloads -->
+                    <!-- Group 4: Network & Workloads -->
                     <TextBlock Text="NETWORK &amp; WORKLOADS" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
                     <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,0,4">
                         <StackPanel>
@@ -187,10 +239,48 @@
                             <Grid Margin="0,4">
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="Auto-pilot process supervisor" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
-                                    <TextBlock Text="Auto-arms when Blender, Ollama, or Python runs" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                    <TextBlock Text="Auto-arms when monitored workloads run" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
                                 </StackPanel>
                                 <CheckBox x:Name="ChkAutoPilot" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                             </Grid>
+
+                            <!-- Sub-Section: Monitored Process Management -->
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <StackPanel Margin="0,4">
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Monitored Processes (Auto-Arm)" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource BrushTextSilver}" VerticalAlignment="Center" />
+                                    <Button Content="Reset Defaults" Click="BtnResetProcesses_Click" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Foreground="{StaticResource BrushTextMuted}" FontSize="9.5" Cursor="Hand" />
+                                </Grid>
+
+                                <!-- Process Chips WrapPanel -->
+                                <WrapPanel x:Name="PnlProcessChips" Margin="0,2,0,6" />
+
+                                <!-- Add Process Input Row -->
+                                <Grid Margin="0,2,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Background="#101114" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="5" Margin="0,0,6,0">
+                                        <TextBox x:Name="TxtNewProcess" 
+                                                 Background="Transparent" 
+                                                 BorderThickness="0" 
+                                                 Foreground="{StaticResource BrushTextWhite}" 
+                                                 CaretBrush="{StaticResource BrushTextWhite}" 
+                                                 FontFamily="{StaticResource FontMono}" 
+                                                 FontSize="11" 
+                                                 Padding="8,5" 
+                                                 VerticalContentAlignment="Center"
+                                                 KeyDown="TxtNewProcess_KeyDown" />
+                                    </Border>
+
+                                    <Button Grid.Column="1" x:Name="BtnAddProcess" Content="+ Add" Click="BtnAddProcess_Click" Style="{StaticResource BentoPresetBtn}" Padding="10,0" Height="28" />
+                                </Grid>
+
+                                <TextBlock Text="Type executable name (e.g. GTA5.exe, unreal.exe) and click + Add or press Enter." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 

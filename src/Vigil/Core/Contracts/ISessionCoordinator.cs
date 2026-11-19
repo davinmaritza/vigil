@@ -22,12 +22,14 @@ public class SessionStateChangedEventArgs : EventArgs
     public SessionStatus Status { get; }
     public TimeSpan RemainingTime { get; }
     public string? TargetProcess { get; }
+    public SessionEndReason? EndReason { get; }
 
-    public SessionStateChangedEventArgs(SessionStatus status, TimeSpan remainingTime, string? targetProcess)
+    public SessionStateChangedEventArgs(SessionStatus status, TimeSpan remainingTime, string? targetProcess, SessionEndReason? endReason = null)
     {
         Status = status;
         RemainingTime = remainingTime;
         TargetProcess = targetProcess;
+        EndReason = endReason;
     }
 }
 
@@ -37,6 +39,7 @@ public interface ISessionCoordinator : IAsyncDisposable
     TimeSpan RemainingTime { get; }
     bool IsInfiniteSession { get; }
     string? ActiveTargetProcess { get; }
+    SessionEndReason? LastEndReason { get; }
 
     Task StartSessionAsync(TimeSpan? duration, string? targetProcess = null, CancellationToken ct = default);
     Task ExtendSessionAsync(TimeSpan additionalTime, CancellationToken ct = default);
