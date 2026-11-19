@@ -174,6 +174,7 @@ public partial class App : Application
         contextMenu.Items.Add(new ToolStripSeparator());
 
         contextMenu.Items.Add("Open Vigil Menu", null, (_, _) => ShowFlyout());
+        contextMenu.Items.Add("⚙ Settings...", null, (_, _) => ShowSettings());
         contextMenu.Items.Add(new ToolStripSeparator());
         contextMenu.Items.Add("Start 1-Hour Session", null, async (_, _) =>
         {
@@ -229,6 +230,13 @@ public partial class App : Application
         {
             ShowFlyout();
         }
+    }
+
+    private void ShowSettings()
+    {
+        var win = new SettingsWindow(_config);
+        win.ShowDialog();
+        _flyout?.RefreshUi();
     }
 
     private async Task<bool> CheckCrashRecoveryAsync()
@@ -318,6 +326,39 @@ public partial class App : Application
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Error capturing screenshot: {ex.Message}");
+            }
+            return;
+        }
+
+        if (cmd == "--screenshot-settings")
+        {
+            try
+            {
+                var targetPath = args.Length > 1 ? args[1] : "vigil_settings_preview.png";
+                var settingsWin = new SettingsWindow(_config);
+                var border = (FrameworkElement)settingsWin.Content;
+                settingsWin.Content = null;
+
+                var w = (int)settingsWin.Width;
+                var h = (int)settingsWin.Height;
+                border.Measure(new System.Windows.Size(w, h));
+                border.Arrange(new Rect(0, 0, w, h));
+                border.UpdateLayout();
+
+                var rtb = new System.Windows.Media.Imaging.RenderTargetBitmap(w, h, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                rtb.Render(border);
+
+                var encoder = new System.Windows.Media.Imaging.PngBitmapEncoder();
+                encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(rtb));
+
+                using (var fs = File.Create(targetPath))
+                {
+                    encoder.Save(fs);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error capturing settings screenshot: {ex.Message}");
             }
             return;
         }

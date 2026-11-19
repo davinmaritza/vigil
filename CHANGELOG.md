@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-11-19
+
+### Added
+- **Visual Settings Window**: Added an interactive modal settings interface (`SettingsWindow`) accessible via the gear button `⚙` in the menu bar popover or system tray context menu.
+- **Visual Sliders & Toggles**: Intuitive controls for Max Processor State (70-100%), Emergency Thermal Threshold (65-95°C), Start on boot, Screen sleep behavior, Mute audio on lid close, Wi-Fi watchdog, Process freezer, and Auto-pilot.
+- **Direct Configuration Access**: Integrated `📄 Edit config.json` shortcut button that opens `%LOCALAPPDATA%\Vigil\config.json` directly in Notepad for power users.
+- **Settings Persistence**: Implemented `VigilConfig.Save()` and `GetConfigPath()` helpers with indented JSON serialization and automatic directory creation.
+
+### Changed
+- **Menu Bar Header Gear Icon**: Added a discrete settings gear button `[⚙]` in the compact flyout header bar next to the close button.
+- **System Tray Menu**: Added `⚙ Settings...` menu item for immediate access to configuration from the taskbar notification area.
+- **Documentation & UI Showcase**: Overhauled Configuration section with an intuitive options guide and table, eliminating reliance on raw JSON editing, and added visual showcases of Active, Standby, and Settings views.
+
 ## [1.0.1] - 2026-11-19
 
 ### Changed

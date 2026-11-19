@@ -1,3 +1,5 @@
+using System.IO;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Vigil.Models;
@@ -21,6 +23,32 @@ public class VigilConfig
 
     [JsonPropertyName("autoPilot")]
     public AutoPilotSettings AutoPilot { get; set; } = new();
+
+    public static string GetConfigPath()
+    {
+        return Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Vigil",
+            "config.json"
+        );
+    }
+
+    public void Save()
+    {
+        try
+        {
+            var path = GetConfigPath();
+            var dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(this, options);
+            File.WriteAllText(path, json);
+        }
+        catch { }
+    }
 }
 
 public class GeneralSettings

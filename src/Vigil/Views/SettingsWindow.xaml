@@ -1,0 +1,213 @@
+<Window x:Class="Vigil.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Vigil Settings"
+        Width="420"
+        Height="710"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        Icon="pack://application:,,,/assets/icon.png"
+        Topmost="True"
+        FontFamily="{StaticResource FontPlusJakarta}">
+
+    <Window.Resources>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="4" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="#28FFFFFF" CornerRadius="2" />
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Window Outer DropShadow Canvas -->
+    <Border Margin="10"
+            Background="#F7121316"
+            CornerRadius="14"
+            BorderBrush="{StaticResource BrushBorderLight}"
+            BorderThickness="1"
+            MouseLeftButtonDown="Window_MouseDown">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" Direction="270" ShadowDepth="8" Opacity="0.75" Color="#000000" />
+        </Border.Effect>
+
+        <Grid Margin="18,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- 0: Header -->
+                <RowDefinition Height="Auto" /> <!-- 1: Divider -->
+                <RowDefinition Height="*" />    <!-- 2: Settings Sections ScrollViewer -->
+                <RowDefinition Height="Auto" /> <!-- 3: Divider -->
+                <RowDefinition Height="Auto" /> <!-- 4: Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- 0: Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="20" Height="20" CornerRadius="5" Background="{StaticResource BrushSurfaceCard}" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" Margin="0,0,8,0" ClipToBounds="True">
+                        <Image Source="pack://application:,,,/assets/icon.png" RenderOptions.BitmapScalingMode="HighQuality" Stretch="UniformToFill" Margin="1" />
+                    </Border>
+                    <TextBlock Text="Vigil Configuration" FontSize="13" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <Button Grid.Column="1" Click="BtnClose_Click" Style="{StaticResource WindowCtrlBtn}" Width="20" Height="20" ToolTip="Close (ESC)">
+                    <Path Data="M3 3 L11 11 M11 3 L3 11" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="8" Height="8" Stretch="Uniform" />
+                </Button>
+            </Grid>
+
+            <!-- 1: Divider -->
+            <Border Grid.Row="1" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,10,0,10" />
+
+            <!-- 2: Settings Sections (Clean Grouped Cards) -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Margin="0,0,4,0">
+
+                    <!-- Group 1: General & Clamshell -->
+                    <TextBlock Text="GENERAL &amp; CLAMSHELL" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
+                    <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,0,14">
+                        <StackPanel>
+                            <!-- Row: Start with Windows -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Start on boot" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Launch Vigil automatically with Windows" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkStartWithWindows" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Safe Screen Behavior -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center" MaxWidth="280">
+                                    <TextBlock Text="Keep screen on while open" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Screen sleeps only when laptop lid is closed" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkKeepScreenOn" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Mute Audio -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Mute audio on lid close" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Silences laptop speakers during closed clamshell" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkMuteAudio" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Group 2: Thermal Guard & Performance -->
+                    <TextBlock Text="THERMAL &amp; VOLTAGE CEILING" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
+                    <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,10" Margin="0,0,0,14">
+                        <StackPanel>
+                            <!-- Max Processor State Slider -->
+                            <Grid Margin="0,2">
+                                <TextBlock Text="Max Processor State" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                <TextBlock x:Name="TxtMaxProcessorLabel" Text="92%" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Right" />
+                            </Grid>
+                            <Slider x:Name="SliderMaxProcessor" Minimum="70" Maximum="100" Value="92" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,6,0,2" ValueChanged="SliderMaxProcessor_ValueChanged" />
+                            <TextBlock Text="92% disables aggressive Turbo Boost voltage surges while maintaining full multi-core compute throughput." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" Margin="0,0,0,6" />
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Emergency Temp Cap Slider -->
+                            <Grid Margin="0,2">
+                                <TextBlock Text="Emergency Thermal Threshold" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                <TextBlock x:Name="TxtEmergencyTempLabel" Text="80°C" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Right" />
+                            </Grid>
+                            <Slider x:Name="SliderEmergencyTemp" Minimum="65" Maximum="95" Value="80" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,6,0,2" ValueChanged="SliderEmergencyTemp_ValueChanged" />
+                            <TextBlock Text="Forces aggressive 80% throttle floor if CPU core exceeds this threshold." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Group 3: Network & Workloads -->
+                    <TextBlock Text="NETWORK &amp; WORKLOADS" FontSize="10" FontWeight="Bold" FontFamily="{StaticResource FontMono}" Foreground="{StaticResource BrushTextDim}" Margin="0,0,0,6" />
+                    <Border Background="#16181D" BorderBrush="{StaticResource BrushBorderHairline}" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,0,0,4">
+                        <StackPanel>
+                            <!-- Row: Wi-Fi Watchdog -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Wi-Fi ping watchdog" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Auto-reconnects dropped Wi-Fi profiles via netsh" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkWifiWatchdog" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Idle Process Freezer -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Suspend heavy chat apps" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Pauses Slack, Discord, and Spotify during runs" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkProcessFreezer" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Auto-Pilot Supervisor -->
+                            <Grid Margin="0,4">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Auto-pilot process supervisor" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                    <TextBlock Text="Auto-arms when Blender, Ollama, or Python runs" FontSize="10" Foreground="{StaticResource BrushTextMuted}" />
+                                </StackPanel>
+                                <CheckBox x:Name="ChkAutoPilot" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- 3: Divider -->
+            <Border Grid.Row="3" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,10,0,10" />
+
+            <!-- 4: Footer -->
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Button Click="BtnOpenJson_Click" Style="{StaticResource BentoPresetBtn}" HorizontalAlignment="Left" Padding="8,4" Height="28">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📄 Edit config.json" FontSize="10.5" />
+                    </StackPanel>
+                </Button>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Click="BtnSave_Click" Content="Save &amp; Apply" Style="{StaticResource BentoActionBtn}" Height="28" Padding="14,0" FontSize="11" Margin="0,0,6,0" />
+                    <Button Click="BtnClose_Click" Content="Close" Style="{StaticResource BentoPresetBtn}" Height="28" Padding="14,0" FontSize="11" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -207,6 +207,13 @@ public partial class FlyoutWindow : Window
         Hide();
     }
 
+    private void BtnSettings_Click(object sender, RoutedEventArgs e)
+    {
+        var settingsWin = new SettingsWindow(_config);
+        settingsWin.ShowDialog();
+        RefreshUi();
+    }
+
     private void Window_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)

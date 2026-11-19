@@ -25,11 +25,12 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-303336?style=flat-square"></a>
   <img alt="Windows 10 / 11 (24H2+)" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20(24H2%2B)-303336?style=flat-square">
   <img alt=".NET 11.0" src="https://img.shields.io/badge/.NET-11.0-303336?style=flat-square">
-  <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.1" src="https://img.shields.io/badge/Release-v1.0.1-536D78?style=flat-square"></a>
+  <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.2" src="https://img.shields.io/badge/Release-v1.0.2-536D78?style=flat-square"></a>
 </p>
 
 <p align="center">
-  <img src="docs/images/vigil-ui-active.png" alt="Vigil Compact Menu Bar Popover" width="268">
+  <img src="docs/images/vigil-ui-active.png" alt="Vigil Active Guard (268 x 208)" width="260">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="docs/images/vigil-ui-standby.png" alt="Vigil Standby Mode (268 x 208)" width="260">
 </p>
 
 > **Important**: Always operate your laptop on a stable, well-ventilated desk surface, never inside a closed backpack or soft bed. Vigil keeps the CPU awake and throttles voltage, but hardware still requires ambient airflow.
@@ -77,7 +78,7 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 ### Prebuilt release (recommended)
 
-1. Download `Vigil.exe` or `vigil-v1.0.1-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
+1. Download `Vigil.exe` or `vigil-v1.0.2-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
 2. Run `Vigil.exe`. The popover appears near your system tray.
 
 ```powershell
@@ -105,60 +106,31 @@ dotnet publish src/Vigil/Vigil.csproj -c Release -r win-x64 --self-contained tru
 
 ## Configuration
 
-Vigil stores its settings in `%LOCALAPPDATA%\Vigil\config.json`. The file is created automatically on first run:
+Vigil includes an intuitive, visual Settings window—no manual editing of JSON files required.
 
-```json
-{
-  "general": {
-    "startWithWindows": false,
-    "defaultDurationSeconds": 7200,
-    "clamshellMode": true,
-    "turnDisplayOffOnSession": false,
-    "muteAudioOnLidClose": true
-  },
-  "thermal": {
-    "maxProcessorStatePercent": 92,
-    "emergencyTempThresholdCelsius": 80,
-    "emergencyThrottlePercent": 80,
-    "pollIntervalSeconds": 5
-  },
-  "battery": {
-    "ecoQoSFloorPercent": 40,
-    "safeHibernateFloorPercent": 15
-  },
-  "wifi": {
-    "watchdogEnabled": true,
-    "watchdogIntervalSeconds": 15,
-    "pingTarget": "1.1.1.1",
-    "priorityProfiles": [
-      "Home_Studio_5G",
-      "Phone_Hotspot"
-    ]
-  },
-  "freezer": {
-    "enabled": true,
-    "processNames": [
-      "slack",
-      "discord",
-      "whatsapp",
-      "spotify"
-    ]
-  },
-  "autoPilot": {
-    "enabled": true,
-    "watchProcesses": [
-      "antigravity.exe",
-      "claude.exe",
-      "cursor.exe",
-      "ollama.exe",
-      "python.exe",
-      "blender.exe",
-      "lmstudio.exe",
-      "jan.exe"
-    ]
-  }
-}
-```
+<p align="center">
+  <img src="docs/images/vigil-settings.png" alt="Vigil Settings Dialog" width="340">
+</p>
+
+### How to access settings
+- Click the **Gear icon `⚙`** in the top-right header of the Vigil popover.
+- Or right-click the Vigil system tray icon and select **`⚙ Settings...`**.
+- Or click **`📄 Edit config.json`** directly inside the Settings dialog to open your configuration file in Notepad.
+
+### Configurable options
+
+| Setting | Default | Description |
+|:---|:---:|:---|
+| **Start on boot** | `Off` | Automatically launches Vigil on Windows startup via HKCU Run registry. |
+| **Keep screen on while open** | `On` | Keeps the laptop display awake while you work; screen sleeps only when physical lid is shut. |
+| **Mute audio on lid close** | `On` | Automatically mutes laptop internal speakers when clamshell lid is closed. |
+| **Max Processor State** | `92%` | Caps CPU voltage to prevent aggressive Turbo Boost heat surges while keeping 100% compute threads active. |
+| **Emergency Thermal Cap** | `80°C` | Enforces an aggressive 80% throttle floor if CPU core package exceeds this temperature threshold. |
+| **Wi-Fi ping watchdog** | `On` | Monitors gateway ping latency and auto-reconnects dropped Wi-Fi profiles via native `netsh`. |
+| **Suspend heavy chat apps** | `On` | Pauses background apps (`Slack`, `Discord`, `Spotify`, `WhatsApp`) via `NtSuspendProcess` during runs. |
+| **Auto-pilot supervisor** | `On` | Automatically arms clamshell guard when AI or compute tasks start (`Blender`, `Ollama`, `Python`, etc.). |
+
+Settings are automatically persisted to `%LOCALAPPDATA%\Vigil\config.json`.
 
 ---
 
