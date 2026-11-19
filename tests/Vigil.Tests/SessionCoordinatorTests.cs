@@ -72,12 +72,13 @@ public class SessionCoordinatorTests : IDisposable
     {
         public string Name => "FakePower";
         public bool IsApplied { get; private set; }
+        public bool IsScreenBlanked { get; set; }
         public Task ApplyAsync(CancellationToken ct = default) { IsApplied = true; return Task.CompletedTask; }
         public Task RevertAsync(CancellationToken ct = default) { IsApplied = false; return Task.CompletedTask; }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
         public void Dispose() { }
-        public void BlankScreen() { }
-        public void WakeScreen() { }
+        public void BlankScreen() { IsScreenBlanked = true; }
+        public void WakeScreen() { IsScreenBlanked = false; }
         public Task<SystemPowerSnapshot> CaptureSnapshotAsync(CancellationToken ct = default)
         {
             return Task.FromResult(new SystemPowerSnapshot { AcLidAction = 1, DcLidAction = 1, AcMaxProcessorState = 100 });

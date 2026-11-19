@@ -7,6 +7,7 @@ namespace Vigil.Core;
 public interface IPowerController : ISystemModifier
 {
     Task<SystemPowerSnapshot> CaptureSnapshotAsync(CancellationToken ct = default);
+    bool IsScreenBlanked { get; }
     void BlankScreen();
     void WakeScreen();
 }
@@ -18,10 +19,12 @@ public class PowerController : IPowerController
     private int? _originalAcLidAction;
     private int? _originalDcLidAction;
     private bool _isApplied;
+    private bool _isScreenBlanked;
     private bool _disposed;
 
     public string Name => "Power and Clamshell Sleep Controller";
     public bool IsApplied => _isApplied;
+    public bool IsScreenBlanked => _isScreenBlanked;
 
     public PowerController(IPowerCfgRunner powerCfg, VigilConfig config)
     {
@@ -100,6 +103,7 @@ public class PowerController : IPowerController
 
     public void BlankScreen()
     {
+        _isScreenBlanked = true;
         Win32.SendMessage(
             Win32.HwndBroadcast,
             Win32.WmSysCommand,
@@ -110,6 +114,7 @@ public class PowerController : IPowerController
 
     public void WakeScreen()
     {
+        _isScreenBlanked = false;
         try
         {
             Win32.SendMessage(
@@ -121,6 +126,10 @@ public class PowerController : IPowerController
             // Universal Windows display wakeup via 1px mouse nudge
             Win32.mouse_event(Win32.MouseEventfMove, 0, 1, 0, 0);
             Win32.mouse_event(Win32.MouseEventfMove, 0, unchecked((uint)-1), 0, 0);
+
+            // Synthetic Shift key tap to wake hardware GPU display pipeline
+            Win32.keybd_event(Win32.VkShift, 0, 0, UIntPtr.Zero);
+            Win32.keybd_event(Win32.VkShift, 0, Win32.KeyEventFKeyUp, UIntPtr.Zero);
         }
         catch { }
     }

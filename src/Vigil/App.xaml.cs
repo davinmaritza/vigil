@@ -26,6 +26,7 @@ public partial class App : Application
     private RecoveryJournal? _recoveryJournal;
     private ProcessWatcher? _processWatcher;
     private PowerCfgRunner? _powerCfg;
+    private GlobalEscapeWatcher? _escapeWatcher;
     private VigilConfig _config = new();
 
     protected override async void OnStartup(StartupEventArgs e)
@@ -101,6 +102,22 @@ public partial class App : Application
 
         // Initialize UI Flyout
         _flyout = new FlyoutWindow(_coordinator, _thermalThrottler, _wifiWatchdog, _processFreezer, _config);
+
+        // Global Escape Hotkey Watcher (Emergency Cancel during Blackscreen)
+        _escapeWatcher = new GlobalEscapeWatcher(_coordinator, _powerController, () =>
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (_flyout != null)
+                {
+                    _flyout.PositionNearTray();
+                    _flyout.RefreshUi();
+                    _flyout.Show();
+                    _flyout.Activate();
+                }
+            });
+        });
+        _flyout.SetEscapeWatcher(_escapeWatcher);
 
         // Setup System Tray Icon
         SetupSystemTray();
@@ -482,6 +499,8 @@ public partial class App : Application
 
     private async void ExitApp()
     {
+        _escapeWatcher?.Dispose();
+
         if (_coordinator != null)
         {
             await _coordinator.EndSessionAsync(SessionEndReason.AppExiting);

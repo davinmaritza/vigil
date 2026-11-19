@@ -15,6 +15,9 @@ public partial class FlyoutWindow : Window
     private readonly IWiFiWatchdog _wifi;
     private readonly IProcessFreezer _freezer;
     private readonly VigilConfig _config;
+    private GlobalEscapeWatcher? _escapeWatcher;
+    private IntPtr _displayNotifyHandle = IntPtr.Zero;
+    private IntPtr _monitorNotifyHandle = IntPtr.Zero;
     private bool _isInitializing = true;
     private bool _isSyncingMasterSwitch = false;
     private bool _hasUserMoved = false;
@@ -64,6 +67,61 @@ public partial class FlyoutWindow : Window
 
         PositionNearTray();
         RefreshUi();
+    }
+
+    public void SetEscapeWatcher(GlobalEscapeWatcher watcher)
+    {
+        _escapeWatcher = watcher;
+    }
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        var hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+        var source = System.Windows.Interop.HwndSource.FromHwnd(hwnd);
+        source?.AddHook(WndProc);
+
+        var guidDisplay = Win32.GuidConsoleDisplayState;
+        _displayNotifyHandle = Win32.RegisterPowerSettingNotification(hwnd, ref guidDisplay, 0);
+
+        var guidMonitor = Win32.GuidMonitorPowerOn;
+        _monitorNotifyHandle = Win32.RegisterPowerSettingNotification(hwnd, ref guidMonitor, 0);
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == Win32.WmPowerBroadcast && wParam == (IntPtr)Win32.PbtPowerSettingChange)
+        {
+            try
+            {
+                var setting = System.Runtime.InteropServices.Marshal.PtrToStructure<Win32.PowerBroadcastSetting>(lParam);
+                if (setting.PowerSetting == Win32.GuidConsoleDisplayState || setting.PowerSetting == Win32.GuidMonitorPowerOn)
+                {
+                    var isOff = setting.Data == 0;
+                    if (_escapeWatcher != null)
+                    {
+                        _escapeWatcher.IsDisplayOff = isOff;
+                    }
+                }
+            }
+            catch { }
+        }
+        return IntPtr.Zero;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        if (_displayNotifyHandle != IntPtr.Zero)
+        {
+            Win32.UnregisterPowerSettingNotification(_displayNotifyHandle);
+            _displayNotifyHandle = IntPtr.Zero;
+        }
+        if (_monitorNotifyHandle != IntPtr.Zero)
+        {
+            Win32.UnregisterPowerSettingNotification(_monitorNotifyHandle);
+            _monitorNotifyHandle = IntPtr.Zero;
+        }
+        base.OnClosed(e);
     }
 
     public void PositionNearTray(bool force = false)

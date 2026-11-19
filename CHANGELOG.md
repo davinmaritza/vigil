@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2026-11-19
 
 ### Added
+- **Global Blackscreen `ESC` Cancel**: Implemented a non-intrusive low-level keyboard hook and display power broadcast listener. When the screen is blacked out or turned off during an active session, pressing `ESC` globally wakes the display backlight, immediately restores normal Windows sleep policies, and opens the flyout window.
 - **Customizable Duration**: Added inline custom duration panel (Hours and Minutes) accessible directly from the popover via the `Custom` chip or by clicking the countdown timer digits, with real-time numeric validation and Enter/ESC keyboard control.
 - **Default Duration Slider**: Configurable 15m to 480m (8 hours) session duration slider in Settings, persisting automatically to `config.json`.
 - **Spacious Minimalist Layout**: Expanded flyout dimensions to a comfortable 320 × 248 px with generous breathing room, 7px radii, and crisp micro-telemetry.

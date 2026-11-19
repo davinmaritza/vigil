@@ -53,7 +53,7 @@ Vigil is engineered for headless compute tasks where you need to close your lapt
 
 Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
-1. **Press `ESC` on your keyboard**: With the Vigil window open, pressing `ESC` instantly terminates the session and restores default Windows power policies.
+1. **Press `ESC` on your keyboard (even during Blackscreen)**: Vigil listens globally during display blackout or with the popover open. Pressing `ESC` instantly wakes your display backlight, cancels the active session, and restores default Windows power policies.
 2. **Prominent Stop Button**: The right-side action button lights up in high-contrast vermillion: **`Stop (ESC)`**.
 3. **Master Hardware Switch**: Toggle the top-right switch in the flyout header to `OFF`.
 4. **Right-Click System Tray**: Right-clicking the taskbar notification icon presents **`🛑 Stop Protection [Restore Normal]`** in bold at the top of the menu.
