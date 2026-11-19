@@ -18,7 +18,7 @@
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#how-to-cancel"><strong>How to Cancel</strong></a> ·
   <a href="#configuration"><strong>Configuration</strong></a> ·
-  <a href="#cli-and-automation"><strong>CLI & Automation</strong></a> 
+  <a href="#cli-and-automation"><strong>CLI & Automation</strong></a>
 </p>
 
 <p align="center">
@@ -200,8 +200,6 @@ Calling `Vigil.exe --session status --json` returns structured telemetry:
   "wifi_ssid": "Studio-5GHz"
 }
 ```
-
----
 
 ---
 
