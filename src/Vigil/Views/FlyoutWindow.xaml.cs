@@ -126,6 +126,8 @@ public partial class FlyoutWindow : Window
                     BtnEndSession.Content = "Stop (ESC)";
                     BtnEndSession.Style = (Style)FindResource("BentoStopActiveBtn");
                     BtnEndSession.ToolTip = "Stop protection and restore normal sleep settings (ESC)";
+                    BtnToggleCustom.Content = "+ Custom";
+                    BtnStartCustom.Content = "+ Add";
                 }
                 else
                 {
@@ -136,6 +138,8 @@ public partial class FlyoutWindow : Window
                     BtnEndSession.Content = "Close (ESC)";
                     BtnEndSession.Style = (Style)FindResource("BentoDangerBtn");
                     BtnEndSession.ToolTip = "Close window to system tray (ESC)";
+                    BtnToggleCustom.Content = "Custom";
+                    BtnStartCustom.Content = "Start";
                 }
             }
             finally
@@ -249,6 +253,69 @@ public partial class FlyoutWindow : Window
         }
     }
 
+    private void BtnToggleCustom_Click(object sender, RoutedEventArgs e) => OpenCustomPanel();
+    private void TxtTimerDigits_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => OpenCustomPanel();
+
+    private void OpenCustomPanel()
+    {
+        GridPresets.Visibility = Visibility.Collapsed;
+        PanelCustomTime.Visibility = Visibility.Visible;
+        TxtCustomHours.Focus();
+        TxtCustomHours.SelectAll();
+    }
+
+    private void BtnCloseCustom_Click(object sender, RoutedEventArgs e) => CloseCustomPanel();
+
+    private void CloseCustomPanel()
+    {
+        PanelCustomTime.Visibility = Visibility.Collapsed;
+        GridPresets.Visibility = Visibility.Visible;
+    }
+
+    private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+    {
+        var regex = new System.Text.RegularExpressions.Regex("[^0-9]+");
+        e.Handled = regex.IsMatch(e.Text);
+    }
+
+    private void CustomInput_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            BtnStartCustom_Click(sender, e);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
+        {
+            CloseCustomPanel();
+            e.Handled = true;
+        }
+    }
+
+    private async void BtnStartCustom_Click(object sender, RoutedEventArgs e)
+    {
+        int.TryParse(TxtCustomHours.Text, out var hours);
+        int.TryParse(TxtCustomMinutes.Text, out var mins);
+
+        if (hours <= 0 && mins <= 0)
+        {
+            mins = 30;
+        }
+
+        var duration = TimeSpan.FromHours(hours) + TimeSpan.FromMinutes(mins);
+        if (_coordinator.CurrentStatus == SessionStatus.Active)
+        {
+            await _coordinator.ExtendSessionAsync(duration);
+        }
+        else
+        {
+            await _coordinator.StartSessionAsync(duration);
+        }
+
+        CloseCustomPanel();
+        RefreshUi();
+    }
+
     private async void Preset_Click(object sender, RoutedEventArgs e)
     {
         if (sender is FrameworkElement { Tag: string tagStr } && int.TryParse(tagStr, out var sec))
@@ -269,6 +336,13 @@ public partial class FlyoutWindow : Window
     {
         if (e.Key == Key.Escape)
         {
+            if (PanelCustomTime.Visibility == Visibility.Visible)
+            {
+                CloseCustomPanel();
+                e.Handled = true;
+                return;
+            }
+
             if (_coordinator.CurrentStatus == SessionStatus.Active)
             {
                 await _coordinator.EndSessionAsync(SessionEndReason.UserRequested);

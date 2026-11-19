@@ -120,6 +120,16 @@
                                 </StackPanel>
                                 <CheckBox x:Name="ChkMuteAudio" Style="{StaticResource BentoToggleSwitch}" HorizontalAlignment="Right" VerticalAlignment="Center" />
                             </Grid>
+
+                            <Border Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,6" />
+
+                            <!-- Row: Default Session Duration Slider -->
+                            <Grid Margin="0,2">
+                                <TextBlock Text="Default session duration" FontSize="11.5" FontWeight="SemiBold" Foreground="{StaticResource BrushTextWhite}" />
+                                <TextBlock x:Name="TxtDefaultDurationLabel" Text="2h 00m" FontFamily="{StaticResource FontMono}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Right" />
+                            </Grid>
+                            <Slider x:Name="SliderDefaultDuration" Minimum="15" Maximum="480" Value="120" TickFrequency="15" IsSnapToTickEnabled="True" Margin="0,6,0,2" ValueChanged="SliderDefaultDuration_ValueChanged" />
+                            <TextBlock Text="Duration applied when starting a session without choosing a specific preset." FontSize="9.5" Foreground="{StaticResource BrushTextMuted}" TextWrapping="Wrap" />
                         </StackPanel>
                     </Border>
 

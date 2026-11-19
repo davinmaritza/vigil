@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2026-11-19
 
 ### Added
+- **Customizable Duration**: Added inline custom duration panel (Hours and Minutes) accessible directly from the popover via the `Custom` chip or by clicking the countdown timer digits, with real-time numeric validation and Enter/ESC keyboard control.
+- **Default Duration Slider**: Configurable 15m to 480m (8 hours) session duration slider in Settings, persisting automatically to `config.json`.
+- **Spacious Minimalist Layout**: Expanded flyout dimensions to a comfortable 320 × 248 px with generous breathing room, 7px radii, and crisp micro-telemetry.
 - **Visual Settings Window**: Added an interactive modal settings interface (`SettingsWindow`) accessible via the gear button `⚙` in the menu bar popover or system tray context menu.
 - **Visual Sliders & Toggles**: Intuitive controls for Max Processor State (70-100%), Emergency Thermal Threshold (65-95°C), Start on boot, Screen sleep behavior, Mute audio on lid close, Wi-Fi watchdog, Process freezer, and Auto-pilot.
 - **Direct Configuration Access**: Integrated `📄 Edit config.json` shortcut button that opens `%LOCALAPPDATA%\Vigil\config.json` directly in Notepad for power users.
@@ -28,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Instant Display Wake**: Added a 1px synthetic mouse nudge to `WakeScreen()` to ensure Windows display drivers immediately restore backlight on lid open or session termination.
 
 ### Added
+- **Radar Chevron Brand Identity**: Integrated precision thermal fin chevron logo. Includes multi-resolution app icons (`icon.ico`, `icon.png`) and high-contrast white tray icon (`tray-icon-32.png`).
 - **Fail-Safe Session Cancellation**: Prominent vermillion `Stop (ESC)` button in flyout window, direct keyboard `ESC` shortcut, top-right master `OFF` switch, and top-level tray menu stop command.
 - **Interactive Preset Chips**: Clean 5-column preset buttons (`30m`, `1h`, `2h`, `4h`, `∞`) for instant session arming.
 

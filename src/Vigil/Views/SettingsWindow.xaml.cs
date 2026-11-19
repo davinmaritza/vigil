@@ -26,6 +26,10 @@ public partial class SettingsWindow : Window
         ChkKeepScreenOn.IsChecked = !_config.General.TurnDisplayOffOnSession;
         ChkMuteAudio.IsChecked = _config.General.MuteAudioOnLidClose;
 
+        var defaultMins = Math.Clamp(_config.General.DefaultDurationSeconds / 60, 15, 480);
+        SliderDefaultDuration.Value = defaultMins;
+        UpdateDefaultDurationLabel(defaultMins);
+
         SliderMaxProcessor.Value = _config.Thermal.MaxProcessorStatePercent;
         TxtMaxProcessorLabel.Text = $"{_config.Thermal.MaxProcessorStatePercent}%";
 
@@ -35,6 +39,21 @@ public partial class SettingsWindow : Window
         ChkWifiWatchdog.IsChecked = _config.WiFi.WatchdogEnabled;
         ChkProcessFreezer.IsChecked = _config.Freezer.Enabled;
         ChkAutoPilot.IsChecked = _config.AutoPilot.Enabled;
+    }
+
+    private void SliderDefaultDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        UpdateDefaultDurationLabel((int)e.NewValue);
+    }
+
+    private void UpdateDefaultDurationLabel(int totalMins)
+    {
+        if (TxtDefaultDurationLabel != null)
+        {
+            var h = totalMins / 60;
+            var m = totalMins % 60;
+            TxtDefaultDurationLabel.Text = h > 0 ? $"{h}h {m:D2}m" : $"{m}m";
+        }
     }
 
     private void SliderMaxProcessor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -74,6 +93,7 @@ public partial class SettingsWindow : Window
 
         _config.General.TurnDisplayOffOnSession = ChkKeepScreenOn.IsChecked != true;
         _config.General.MuteAudioOnLidClose = ChkMuteAudio.IsChecked == true;
+        _config.General.DefaultDurationSeconds = (int)SliderDefaultDuration.Value * 60;
 
         _config.Thermal.MaxProcessorStatePercent = (int)SliderMaxProcessor.Value;
         _config.Thermal.EmergencyTempThresholdCelsius = (int)SliderEmergencyTemp.Value;

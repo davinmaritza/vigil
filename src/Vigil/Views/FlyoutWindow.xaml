@@ -68,20 +68,53 @@
             <!-- 1: Divider -->
             <Border Grid.Row="1" Height="1" Background="{StaticResource BrushBorderHairline}" Margin="0,8,0,10" />
 
-            <!-- 2: Countdown Timer & Subtitle (Spacious, High Legibility) -->
+            <!-- 2: Countdown Timer & Subtitle (Spacious, High Legibility, Click to Customize) -->
             <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,10">
-                <TextBlock x:Name="TxtTimerDigits" Text="--:--:--" FontFamily="{StaticResource FontMono}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Center" />
+                <TextBlock x:Name="TxtTimerDigits" Text="--:--:--" Cursor="Hand" ToolTip="Click to customize duration" MouseLeftButtonDown="TxtTimerDigits_MouseLeftButtonDown" FontFamily="{StaticResource FontMono}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource BrushTextWhite}" HorizontalAlignment="Center" />
                 <TextBlock x:Name="TxtTargetStatus" Text="System Standby" FontSize="10.5" Foreground="{StaticResource BrushTextMuted}" HorizontalAlignment="Center" Margin="0,2,0,0" />
             </StackPanel>
 
-            <!-- 3: Duration Presets (Comfortable Chips) -->
-            <UniformGrid Grid.Row="3" Columns="5" Margin="0,0,0,10">
-                <Button Click="Preset_Click" Tag="1800" Content="30m" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10.5" Margin="2,0" />
-                <Button Click="Preset_Click" Tag="3600" Content="1h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10.5" Margin="2,0" />
-                <Button Click="Preset_Click" Tag="7200" Content="2h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10.5" Margin="2,0" />
-                <Button Click="Preset_Click" Tag="14400" Content="4h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10.5" Margin="2,0" />
-                <Button Click="Preset_Click" Tag="-1" Content="∞" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="11" Margin="2,0" />
-            </UniformGrid>
+            <!-- 3: Duration Presets & Inline Custom Duration -->
+            <Grid Grid.Row="3" Margin="0,0,0,10">
+                <!-- View A: Preset Chips (6 Columns) -->
+                <UniformGrid x:Name="GridPresets" Columns="6">
+                    <Button Click="Preset_Click" Tag="1800" Content="30m" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10" Margin="1.5,0" />
+                    <Button Click="Preset_Click" Tag="3600" Content="1h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10" Margin="1.5,0" />
+                    <Button Click="Preset_Click" Tag="7200" Content="2h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10" Margin="1.5,0" />
+                    <Button Click="Preset_Click" Tag="14400" Content="4h" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="10" Margin="1.5,0" />
+                    <Button Click="Preset_Click" Tag="-1" Content="∞" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="11" Margin="1.5,0" />
+                    <Button x:Name="BtnToggleCustom" Click="BtnToggleCustom_Click" Content="Custom" Style="{StaticResource BentoPresetBtn}" Height="25" FontSize="9.5" Margin="1.5,0" ToolTip="Set custom duration (hours and minutes)" />
+                </UniformGrid>
+
+                <!-- View B: Inline Custom Duration Picker -->
+                <Grid x:Name="PanelCustomTime" Visibility="Collapsed" Height="25">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="42" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="42" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="H:" FontFamily="{StaticResource FontMono}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <TextBox Grid.Column="1" x:Name="TxtCustomHours" Text="1" Style="{StaticResource BentoNumberInput}" Height="24" MaxLength="2" PreviewTextInput="NumberValidationTextBox" KeyDown="CustomInput_KeyDown" />
+
+                    <TextBlock Grid.Column="2" Text="h" FontFamily="{StaticResource FontMono}" FontSize="10" Foreground="{StaticResource BrushTextDim}" VerticalAlignment="Center" Margin="3,0,6,0" />
+
+                    <TextBlock Grid.Column="3" Text="M:" FontFamily="{StaticResource FontMono}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <TextBox Grid.Column="4" x:Name="TxtCustomMinutes" Text="30" Style="{StaticResource BentoNumberInput}" Height="24" MaxLength="2" PreviewTextInput="NumberValidationTextBox" KeyDown="CustomInput_KeyDown" />
+
+                    <TextBlock Grid.Column="5" Text="m" FontFamily="{StaticResource FontMono}" FontSize="10" Foreground="{StaticResource BrushTextDim}" VerticalAlignment="Center" Margin="3,0,8,0" />
+
+                    <Button Grid.Column="6" x:Name="BtnStartCustom" Click="BtnStartCustom_Click" Content="Start" Style="{StaticResource BentoActionBtn}" Height="24" FontSize="10.5" Padding="0" Margin="0,0,4,0" />
+                    <Button Grid.Column="7" x:Name="BtnCloseCustom" Click="BtnCloseCustom_Click" Style="{StaticResource WindowCtrlBtn}" Width="20" Height="20" ToolTip="Cancel custom duration">
+                        <Path Data="M3 3 L11 11 M11 3 L3 11" Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="7" Height="7" Stretch="Uniform" />
+                    </Button>
+                </Grid>
+            </Grid>
 
             <!-- 4: Action Buttons (Two Wide, Comfortable Touch Targets) -->
             <Grid Grid.Row="4" Margin="0,0,0,8">

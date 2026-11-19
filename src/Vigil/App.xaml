@@ -245,5 +245,38 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Minimalist Number Input (Dark Obsidian) -->
+        <Style x:Key="BentoNumberInput" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}" />
+            <Setter Property="Background" Value="#16181D" />
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorderHairline}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CaretBrush" Value="{StaticResource BrushTextWhite}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="InputBorder" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="InputBorder" Property="BorderBrush" Value="{StaticResource BrushBorderActive}" />
+                                <Setter TargetName="InputBorder" Property="Background" Value="#1F2229" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

@@ -65,7 +65,7 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 - **Compact Menu Bar Interface**: Ultra-sleek 320 × 248 px popover inspired by Insomnia on macOS, Dieter Rams, and Teenage Engineering. Floats right above your taskbar system tray with an Obsidian (`#131417`) and Moon-White (`#EDEDF0`) palette. 100% clean English typography with zero AI-slop.
 - **Master Hardware Switch**: Direct `ON` / `OFF` toggle in the top-right header for instant manual protection without configuring a timer.
-- **Quick Preset Chips**: Jump into `30m`, `1h`, `2h`, `4h`, or indefinite (`∞`) protection with a single click.
+- **Customizable Duration & Presets**: Set any custom duration (hours and minutes) on the fly by clicking the countdown timer or the `Custom` chip. Jump directly into `30m`, `1h`, `2h`, `4h`, or indefinite (`∞`) sessions with a single click, or set your preferred default duration slider in Settings.
 - **Safe Display Handling**: Display blackout on session start is disabled by default (`turnDisplayOffOnSession = false`), ensuring your screen never goes unexpectedly black while you work. When the physical laptop lid is closed, the display backlight sleeps naturally and wakes instantly on lid open.
 - **CPU Thermal Throttler**: Enforces a 92% maximum processor state cap (`PROCTHROTTLEMAX`), preventing Intel and AMD Turbo Boost voltage spikes while preserving over 95% multi-core throughput. Core temperatures drop by 20°C to 25°C.
 - **Wi-Fi Watchdog**: Periodically monitors local gateway ping latency and auto-reassociates dropped wireless profiles via `netsh` during headless operation, with an inline toggle switch in the flyout.
