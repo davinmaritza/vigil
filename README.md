@@ -25,7 +25,7 @@
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-303336?style=flat-square"></a>
   <img alt="Windows 10 / 11 (24H2+)" src="https://img.shields.io/badge/Windows-10%20%7C%2011%20(24H2%2B)-303336?style=flat-square">
   <img alt=".NET 11.0" src="https://img.shields.io/badge/.NET-11.0-303336?style=flat-square">
-  <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.0" src="https://img.shields.io/badge/Release-v1.0.0-536D78?style=flat-square"></a>
+  <a href="https://github.com/davinmaritza/vigil/releases/latest"><img alt="Release v1.0.1" src="https://img.shields.io/badge/Release-v1.0.1-536D78?style=flat-square"></a>
 </p>
 
 <p align="center">
@@ -77,7 +77,7 @@ Vigil provides four immediate, fail-safe ways to cancel an active guard session:
 
 ### Prebuilt release (recommended)
 
-1. Download `Vigil.exe` or `vigil-v1.0.0-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
+1. Download `Vigil.exe` or `vigil-v1.0.1-win-x64.zip` from [GitHub Releases](https://github.com/davinmaritza/vigil/releases/latest).
 2. Run `Vigil.exe`. The popover appears near your system tray.
 
 ```powershell

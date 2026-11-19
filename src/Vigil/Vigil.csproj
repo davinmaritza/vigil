@@ -11,6 +11,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <RootNamespace>Vigil</RootNamespace>
     <AssemblyName>Vigil</AssemblyName>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
 
